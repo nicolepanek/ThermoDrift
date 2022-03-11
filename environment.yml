@@ -1,0 +1,11 @@
+name: thermo_drift_env
+channels:
+  - defaults
+dependencies:
+  - numpy
+  - pandas
+  - torch
+  - dash
+  - matplotlib
+  - Bio 
+prefix: /opt/anaconda3/envs/thermo_drift_env
