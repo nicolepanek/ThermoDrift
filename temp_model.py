@@ -5,7 +5,7 @@ import Bio
 from Bio.Seq import Seq
 from Bio import SeqIO
 
-#read in FASTO file with Thermophllic proteins datasets
+#read in FASTA file with Thermophllic proteins datasets
 
 thermo_dict = {}
 with open('Examples/2AYQ.fasta') as thermo_fasta_file:  # Will close handle cleanly
