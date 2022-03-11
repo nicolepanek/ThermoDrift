@@ -5,11 +5,10 @@ import Bio
 from Bio.Seq import Seq
 from Bio import SeqIO
 
-#read in FASTO file
+#read in FASTO file with Thermophllic proteins datasets
 
-#import Thermophllic proteins datasets
 thermo_dict = {}
-with open('uniprot-thermophilus.fasta') as thermo_fasta_file:  # Will close handle cleanly
+with open('Examples/2AYQ.fasta') as thermo_fasta_file:  # Will close handle cleanly
     identifiers = []
     sequence = []
     for seq_record in SeqIO.parse(thermo_fasta_file, 'fasta'):  # (generator)
@@ -20,5 +19,10 @@ with open('uniprot-thermophilus.fasta') as thermo_fasta_file:  # Will close hand
 thermo_list = list(thermo_dict.items())
 df_thermo = pd.DataFrame(thermo_list)
 df_thermo.columns = ['protein','sequence']
-df_thermo['class'] = 'Thermophillic'
-print(len(df_thermo.index))
+
+#convert to csv and save in "Examples" folder
+#If this were the real model, it would return a .csv file 
+	#with the classification probabilities
+	
+df_thermo.to_csv('Examples/temp_out.csv', index=True)
+print(df_thermo)
