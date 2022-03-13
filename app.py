@@ -16,6 +16,8 @@ import pandas as pd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 title = "ThermoDrift: Predict your protein's stability"
+#heading1 = 
+
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -37,15 +39,22 @@ app.layout = html.Div([
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
+    
+    try:
+        if 'fasta' in filename:
+            # decode user uploaded fasta contents
+            decoded = base64.b64decode(content_string.split(',')[-1].encode('ascii')).decode()
+            # wrap decoded string contents as a stream
+            fasta_contents = io.StringIO(decoded)
+            # call our dummy function
+            df = temp_model(fasta_contents)
 
-    # decode user uploaded contents
-    decoded = base64.b64decode(content_string.split(',')[-1].encode('ascii')).decode()
 
-    # wrap decoded string contents as a stream
-    fasta_contents = io.StringIO(decoded)
-
-    # make test csv out of fasta file using test function
-    df = temp_model(fasta_contents)
+    except Exception as e:
+        print(e)
+        return html.Div([
+            'Wrong file type uploaded. Please upload a FASTA file.'
+        ])
 
     return html.Div([
         html.H5(filename),
