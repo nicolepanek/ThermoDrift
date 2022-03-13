@@ -8,6 +8,7 @@ import dash
 from dash.dependencies import Input, Output, State
 from dash import dcc, html, dash_table
 
+
 # test function that converts fasta to csv
 from temp_model import temp_model
 
@@ -39,19 +40,12 @@ def parse_contents(contents, filename, date):
 
     # decode user uploaded contents
     decoded = base64.b64decode(content_string.split(',')[-1].encode('ascii')).decode()
-    print(decoded)
-    print(filename)
-    print(date)
 
-    # write contents to new fasta file
-    ### current issue: have to write str contents to new file in order to run code ###
-    ### how to get this working without having to save string contents to file? ###
-    text_file = open("fasta_contents_test.txt", "w")
-    n = text_file.write(decoded)
-    text_file.close()
+    # wrap decoded string contents as a stream
+    fasta_contents = io.StringIO(decoded)
 
-    # make test csv out of fasta file
-    df = temp_model('fasta_contents_test.txt')
+    # make test csv out of fasta file using test function
+    df = temp_model(fasta_contents)
 
     return html.Div([
         html.H5(filename),
@@ -70,6 +64,7 @@ def parse_contents(contents, filename, date):
             'whiteSpace': 'pre-wrap',
             'wordBreak': 'break-all'
         })
+                     ])
                      
 @app.callback(Output('output-data-upload', 'children'),
               Input('upload-data', 'contents'),
