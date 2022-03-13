@@ -1,41 +1,86 @@
 # visit http://127.0.0.1:8050/ in your web browser.
 
-from dash import Dash, html, dcc, Input, Output
-from dash import dash_table
-from temp_model import temp_model 
+import base64
+import datetime
+import io
+
+import dash
+from dash.dependencies import Input, Output, State
+from dash import dcc, html, dash_table
+
+# test function that converts fasta to csv
+from temp_model import temp_model
+
 import pandas as pd
 
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+title = "ThermoDrift: Predict your protein's stability"
 
-app = Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-title="ThermoDrift: Predict your protein's stability"
 
 app.layout = html.Div([
+                       # title & headings
                        html.H1(title),
-                       html.H4('Upload your protein FASTA File'),
-              
-                       # Upload fasta file(s)
+                       html.H4("Upload your protein FASTA file"),
+                       # Upload fasta file
                        dcc.Upload(
                            id='upload-data',
                            children=html.Div([
-                                    html.Button('Upload File')
-                                    ]),
-                            )
-                       # figure out how to display data table returned from process_fasta
+                                              html.Button('Upload File')
+                                              ]),
+                           multiple=True
+                           ),
+                       html.Div(id='output-data-upload')
                        ])
 
-@app.callback(
-    Output(component_id='data-table', component_property='children'),
-    Input(component_id='upload-data', component_property='contents')
-    )
+def parse_contents(contents, filename, date):
+    content_type, content_string = contents.split(',')
 
-# Process uploaded fasta file(s)
-def process_fasta(contents):
-    
-    children = temp_model(contents) 
-    
-    return children
+    # decode user uploaded contents
+    decoded = base64.b64decode(content_string.split(',')[-1].encode('ascii')).decode()
+    print(decoded)
+    print(filename)
+    print(date)
 
+    # write contents to new fasta file
+    ### current issue: have to write str contents to new file in order to run code ###
+    ### how to get this working without having to save string contents to file? ###
+    text_file = open("fasta_contents_test.txt", "w")
+    n = text_file.write(decoded)
+    text_file.close()
+
+    # make test csv out of fasta file
+    df = temp_model('fasta_contents_test.txt')
+
+    return html.Div([
+        html.H5(filename),
+        html.H6(datetime.datetime.fromtimestamp(date)),
+
+        dash_table.DataTable(
+            df.to_dict('records'),
+            [{'name': i, 'id': i} for i in df.columns]
+        ),
+
+        html.Hr(),  # horizontal line
+
+        # For debugging, display the raw contents provided by the web browser
+        html.Div('Raw Content'),
+        html.Pre(contents[0:200] + '...', style={
+            'whiteSpace': 'pre-wrap',
+            'wordBreak': 'break-all'
+        })
+                     
+@app.callback(Output('output-data-upload', 'children'),
+              Input('upload-data', 'contents'),
+              State('upload-data', 'filename'),
+              State('upload-data', 'last_modified'))
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+        return children
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True)                     
