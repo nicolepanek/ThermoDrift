@@ -40,56 +40,37 @@ app.layout = html.Div([
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
     
-    try:
-        if 'fasta' in filename:
-            # decode user uploaded fasta contents
-            decoded = base64.b64decode(content_string.split(',')[-1].encode('ascii')).decode()
-            # wrap decoded string contents as a stream
-            fasta_contents = io.StringIO(decoded)
-            # call our dummy function
-            df = temp_model(fasta_contents)
 
-            return html.Div([
-                             html.H5(filename),
-                             html.H6(datetime.datetime.fromtimestamp(date)),
-                             dash_table.DataTable(
-                                 df.to_dict('records'),
-                                 [{'name': i, 'id': i} for i in df.columns]
-                                 ),
-                             html.Hr(),  # horizontal line
-                             # For debugging, display the raw contents provided by the web browser
-                             html.Div('Raw Content'),
-                             html.Pre(contents[0:200] + '...',
-                                      style={
-                                          'whiteSpace': 'pre-wrap',
-                                          'wordBreak': 'break-all'
-                                          })
-                             ])
-                             
-    except Exception as e:
-        print(e)
+    if 'fasta' in filename:
+        # decode user uploaded fasta contents
+        decoded = base64.b64decode(content_string.split(',')[-1].encode('ascii')).decode()
+        # wrap decoded string contents as a stream
+        fasta_contents = io.StringIO(decoded)
+        # call our dummy function
+        df = temp_model(fasta_contents)
+
         return html.Div([
-            'Wrong file type uploaded. Please upload a FASTA file.'
-        ])
-
-#    return html.Div([
-#        html.H5(filename),
-#        html.H6(datetime.datetime.fromtimestamp(date)),
-
-#        dash_table.DataTable(
-#            df.to_dict('records'),
-#            [{'name': i, 'id': i} for i in df.columns]
-#        ),
-
-#        html.Hr(),  # horizontal line
-
-        # For debugging, display the raw contents provided by the web browser
-#        html.Div('Raw Content'),
-#        html.Pre(contents[0:200] + '...', style={
-#            'whiteSpace': 'pre-wrap',
-#            'wordBreak': 'break-all'
-#        })
-#                     ])
+                         html.H5(filename),
+                         html.H6(datetime.datetime.fromtimestamp(date)),
+                         dash_table.DataTable(
+                             df.to_dict('records'),
+                             [{'name': i, 'id': i} for i in df.columns]
+                             ),
+                         html.Hr(),  # horizontal line
+                         # For debugging, display the raw contents provided by the web browser
+                         html.Div('Raw Content'),
+                         html.Pre(contents[0:200] + '...',
+                                  style={
+                                      'whiteSpace': 'pre-wrap',
+                                      'wordBreak': 'break-all'
+                                      })
+                                ])
+                             
+    else:
+        return html.Div([
+                         'Wrong file type uploaded. Please upload a FASTA file.'
+                         ])
+        
                      
 @app.callback(Output('output-data-upload', 'children'),
               Input('upload-data', 'contents'),
