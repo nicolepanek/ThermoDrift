@@ -148,6 +148,7 @@ for epoch in range(num_epochs):
             torch.save(loss, '/gscratch/stf/jgershon/loss.pt')
             accuracy = torch.tensor(accuracy_list)
             torch.save(accuracy, '/gscratch/stf/jgershon/accuracy.pt')
-
+			path = '/gscratch/stf/jgershon/model_state_'+count+'.pt'
+			torch.save(model.state_dict(), path)
 
 
