@@ -12,38 +12,38 @@ from sklearn.model_selection import train_test_split
 
 import thermodrift_model
 
+def load_data():
+	#Load data
+	X = torch.load('/gscratch/stf/jgershon/tensor_x.pt')
+	Y = torch.load('/gscratch/stf/jgershon/tensor_y.pt')
+	return X,Y
 
-#Load data
-X = torch.load('/gscratch/stf/jgershon/tensor_x.pt')
-Y = torch.load('/gscratch/stf/jgershon/tensor_y.pt')
+def split_data(X,Y):
+	#Convert y back from one hot encoding
+	Y = torch.argmax(Y,dim=1)
+	print('new Y: ',Y[:10])
+
+	print('X load: ',X.size())
+	print('Y load: ',Y.size())
+
+	# Split data tensors into dev and test sets
+	X_train, X_test, y_train, y_test = train_test_split( \
+		X, Y, test_size = 0.20, random_state=42)
+	print('X_train: ', X_train.size())
+	print('X_test: ',X_test.size())
+	print('y_train: ', y_train.size())
+	print('y_test: ',y_test.size())
+	torch.save(X_train,'/gscratch/stf/jgershon/X_train.pt')
+	torch.save(X_test,'/gscratch/stf/jgershon/X_test.pt')
+	torch.save(y_train,'/gscratch/stf/jgershon/y_train.pt')
+	torch.save(y_test,'/gscratch/stf/jgershon/y_test.pt')
+	return X_train, X_test, y_train, y_test
 
 
-#Convert y back from one hot encoding
-Y = torch.argmax(Y,dim=1)
-print('new Y: ',Y[:10])
+#Loading and processing the data:
+X, Y = load_data()
+X_train, X_test, y_train, y_test = split_data(X,Y)
 
-print('X load: ',X.size())
-print('Y load: ',Y.size())
-
-# Split data tensors into dev and test sets
-X_train, X_test, y_train, y_test = train_test_split( \
-    X, Y, test_size = 0.20, random_state=42)
-print('X_train: ', X_train.size())
-print('X_test: ',X_test.size())
-print('y_train: ', y_train.size())
-print('y_test: ',y_test.size())
-torch.save(X_train,'/gscratch/stf/jgershon/X_train.pt')
-torch.save(X_test,'/gscratch/stf/jgershon/X_test.pt')
-torch.save(y_train,'/gscratch/stf/jgershon/y_train.pt')
-torch.save(y_test,'/gscratch/stf/jgershon/y_test.pt')
-
-# Check that the X_train has the same number of examples as y_train
-assert X_train.size()[0] == y_train.size()[0], \
-"Mismatch in X_train and y_train number of examples. Check tensor size."
-
-# Check that X_test has the same number of examples as y_test
-assert X_test.size()[0] == y_test.size()[0], \
-"Mismatch in X_test and y_test number of examples. Check tensor size."
 
 # Do we need to normalize the one hot encoded tensors? Prob not.
 # Generate train and test datasets
@@ -57,7 +57,7 @@ train_loader = torch.utils.data.DataLoader(trainset,
                                            num_workers=2)
 test_loader = torch.utils.data.DataLoader(testset,
                                           batch_size = 100,
-                                         shuffle = False,
+                                         shuffle = True,
                                           num_workers=2) 
 
 
@@ -69,6 +69,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(),
                        lr = 3e-4,
                        weight_decay= 0.001)
+
 
 #Moving tensors over to gpu if available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
