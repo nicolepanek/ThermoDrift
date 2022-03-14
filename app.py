@@ -16,11 +16,14 @@ list_aa = list("ARNDCQEGHILKMFPSTWYVUX_?-")
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 title = "ThermoDrift: Predict your protein's stability"
 heading1 = "Upload your protein FASTA File" 
+logo_filename = "thermodrift_logo.png"
+encoded_logo = base64.b64encode(open(logo_filename, 'rb').read())
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div([
-                       # title & headings
+                       # title & headings & logo
+                       html.Img(src='data:image/png;base64,{}'.format(encoded_logo.decode()), height=300),
                        html.H1(title),
                        html.H4(heading1),
                        # Upload fasta file
@@ -82,8 +85,6 @@ def parse_contents(contents, filename, date):
                          Error: Wrong file type uploaded. 
                                 Please upload a FASTA file.
                          """])
-#df = pd.DataFrame({"a": [1, 2, 3, 4], "b": [2, 1, 5, 6], "c": ["x", "x", "y", "y"]})        
-
                      
 @app.callback(Output('output-data-upload', 'children'), 
               Input('upload-data', 'contents'),
