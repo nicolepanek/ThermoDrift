@@ -11,55 +11,13 @@ from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
 
 import thermodrift_model
-
-def load_data():
-	#Load data
-	X = torch.load('/gscratch/stf/jgershon/tensor_x.pt')
-	Y = torch.load('/gscratch/stf/jgershon/tensor_y.pt')
-	return X,Y
-
-def split_data(X,Y):
-	#Convert y back from one hot encoding
-	Y = torch.argmax(Y,dim=1)
-	print('new Y: ',Y[:10])
-
-	print('X load: ',X.size())
-	print('Y load: ',Y.size())
-
-	# Split data tensors into dev and test sets
-	X_train, X_test, y_train, y_test = train_test_split( \
-		X, Y, test_size = 0.20, random_state=42)
-	print('X_train: ', X_train.size())
-	print('X_test: ',X_test.size())
-	print('y_train: ', y_train.size())
-	print('y_test: ',y_test.size())
-	torch.save(X_train,'/gscratch/stf/jgershon/X_train.pt')
-	torch.save(X_test,'/gscratch/stf/jgershon/X_test.pt')
-	torch.save(y_train,'/gscratch/stf/jgershon/y_train.pt')
-	torch.save(y_test,'/gscratch/stf/jgershon/y_test.pt')
-	return X_train, X_test, y_train, y_test
+from load_train_data import load_data, split_data, make_data_loader
 
 
 #Loading and processing the data:
 X, Y = load_data()
-X_train, X_test, y_train, y_test = split_data(X,Y)
-
-
-# Do we need to normalize the one hot encoded tensors? Prob not.
-# Generate train and test datasets
-trainset = TensorDataset(X_train, y_train)
-testset = TensorDataset(X_test, y_test)
-
-# Prepare train and test loaders
-train_loader = torch.utils.data.DataLoader(trainset,
-                                           batch_size = 100,
-                                          shuffle = True,
-                                           num_workers=2)
-test_loader = torch.utils.data.DataLoader(testset,
-                                          batch_size = 100,
-                                         shuffle = True,
-                                          num_workers=2) 
-
+trainset, testset = split_data(X,Y)
+train_loader, test_loader = make_data_loader(trainset, testset, batchsize=100)
 
 # Instantiate the network
 model = thermodrift_model.Net()
