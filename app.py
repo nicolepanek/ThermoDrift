@@ -34,7 +34,10 @@ app.layout = html.Div([
                                               ]),
                            multiple=True
                            ),
-                       html.Div(id='output-data-upload')
+                       html.Div(id='output-data-upload'),
+                       #Button to download .csv of output data
+                       html.Button('Download .csv file', id='download'),
+                       dcc.Download(id="download-dataframe-csv")
                        ])
 
 def parse_contents(contents, filename, date):
@@ -83,5 +86,16 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
 
+@app.callback(Output('download-dataframe-csv', 'file'),
+              Input[('download', 'n_clicks'), ('output-data-upload', 'children')])
+
+def download_opt(n_clicks, children):
+    if n_clicks is None:
+        raise PreventUpdate
+    else:
+        file=dcc.send_data_frame(children.to_csv, "ThermoDrift_outputs.csv")
+    return file
+
+
 if __name__ == '__main__':
-    app.run_server(debug=True)                     
+    app.run_server(debug=True, port=8050)                     
