@@ -33,8 +33,8 @@ app.layout = html.Div([
                            ),
                        html.Div(id='output-data-upload'),
                        #Button to download .csv of output data
-                       html.Button('Download .csv file', id='download'),
-                       dcc.Download(id="download-dataframe-csv")
+                       html.Button("Download CSV", id="btn_csv"),
+                       dcc.Download(id="download-dataframe-csv"),
                        ])
 
 def parse_contents(contents, filename, date):
@@ -81,9 +81,10 @@ def parse_contents(contents, filename, date):
                          Error: Wrong file type uploaded. 
                                 Please upload a FASTA file.
                          """])
-        
+df = pd.DataFrame({"a": [1, 2, 3, 4], "b": [2, 1, 5, 6], "c": ["x", "x", "y", "y"]})        
+
                      
-@app.callback(Output('output-data-upload', 'children'),
+@app.callback(Output('output-data-upload', 'children'), 
               Input('upload-data', 'contents'),
               State('upload-data', 'filename'),
               State('upload-data', 'last_modified'))
@@ -94,16 +95,13 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
 
-@app.callback(Output('download-dataframe-csv', 'file'),
-              Input[('download', 'n_clicks'), ('output-data-upload', 'children')])
-
-def download_opt(n_clicks, children):
-    if n_clicks is None:
-        raise PreventUpdate
-    else:
-        file=dcc.send_data_frame(children.to_csv, "ThermoDrift_outputs.csv")
-    return file
-
+@app.callback(
+    Output("download-dataframe-csv", "data"),
+    Input("btn_csv", "n_clicks"),
+    prevent_initial_call=True,
+)
+def func(n_clicks):
+    return dcc.send_data_frame(df.to_csv, "mydf.csv")
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8050)                     
