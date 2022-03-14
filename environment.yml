@@ -7,5 +7,8 @@ dependencies:
   - torch
   - dash
   - matplotlib
-  - Bio 
+  - Bio
+  - torch.nn
+  - torch.optim
+  - torch.autograd 
 prefix: /opt/anaconda3/envs/thermo_drift_env
