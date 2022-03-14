@@ -33,6 +33,7 @@ app.layout = html.Div([
                            ),
                        html.Div(id='output-data-upload'),
                        #Button to download .csv of output data
+                       html.Hr(),
                        html.Button("Download CSV", id="btn_csv"),
                        dcc.Download(id="download-dataframe-csv"),
                        ])
@@ -102,13 +103,7 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
     prevent_initial_call=True,
 )
 def func(n_clicks):
-    if df is None:
-        return html.Div(["""
-                         Error: Model has not been run. 
-                                Please upload a FASTA file.
-                         """])
-    else:
-        return dcc.send_data_frame(df.to_csv, "thermodrift_output.csv")
+    return dcc.send_data_frame(df.to_csv, "thermodrift_output.csv")
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8050)                     
