@@ -11,7 +11,7 @@ from dash import dcc, html, dash_table
 # dummy function for temporary model
 from temp_model import temp_model
 # list of one letter amino acid codes
-list_aa = list("GALMFWKQESPVICYHRNDT")
+list_aa = list("ARNDCQEGHILKMFPSTWYVUX_?-")
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 title = "ThermoDrift: Predict your protein's stability"
