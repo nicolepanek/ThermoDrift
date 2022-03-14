@@ -1,0 +1,9 @@
+discarding /usr/lusers/jgershon/anaconda3/bin from PATH
+prepending /usr/lusers/jgershon/anaconda3/envs/thermodrift/bin to PATH
+Traceback (most recent call last):
+  File "train_script.py", line 13, in <module>
+    import thermodrift_model
+  File "/gscratch/home/jgershon/ThermoDrift/thermodrift_model.py", line 58
+    print('x forward: ',x.size()) 
+                                 ^
+TabError: inconsistent use of tabs and spaces in indentation

@@ -1,0 +1,20 @@
+discarding /usr/lusers/jgershon/anaconda3/bin from PATH
+prepending /usr/lusers/jgershon/anaconda3/envs/thermodrift/bin to PATH
+Traceback (most recent call last):
+  File "train_script.py", line 124, in <module>
+    outputs = model(test)
+  File "/usr/lusers/jgershon/anaconda3/envs/thermodrift/lib/python3.5/site-packages/torch/nn/modules/module.py", line 550, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/gscratch/home/jgershon/ThermoDrift/thermodrift_model.py", line 62, in forward
+    x = self.features(x.float())
+  File "/usr/lusers/jgershon/anaconda3/envs/thermodrift/lib/python3.5/site-packages/torch/nn/modules/module.py", line 550, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/usr/lusers/jgershon/anaconda3/envs/thermodrift/lib/python3.5/site-packages/torch/nn/modules/container.py", line 100, in forward
+    input = module(input)
+  File "/usr/lusers/jgershon/anaconda3/envs/thermodrift/lib/python3.5/site-packages/torch/nn/modules/module.py", line 550, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/usr/lusers/jgershon/anaconda3/envs/thermodrift/lib/python3.5/site-packages/torch/nn/modules/conv.py", line 353, in forward
+    return self._conv_forward(input, self.weight)
+  File "/usr/lusers/jgershon/anaconda3/envs/thermodrift/lib/python3.5/site-packages/torch/nn/modules/conv.py", line 350, in _conv_forward
+    self.padding, self.dilation, self.groups)
+RuntimeError: Expected 4-dimensional input for 4-dimensional weight [5, 1, 3, 3], but got 3-dimensional input of size [100, 500, 25] instead
