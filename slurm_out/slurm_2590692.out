@@ -1,6 +1,0 @@
-discarding /usr/lusers/jgershon/anaconda3/bin from PATH
-prepending /usr/lusers/jgershon/anaconda3/envs/thermodrift/bin to PATH
-Traceback (most recent call last):
-  File "train_script.py", line 23, in <module>
-    print('new Y: ',Y[:10])
-IndexError: slice() cannot be applied to a 0-dim tensor.

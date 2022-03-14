@@ -1,3 +1,0 @@
-discarding /usr/lusers/jgershon/anaconda3/bin from PATH
-prepending /usr/lusers/jgershon/anaconda3/envs/thermodrift/bin to PATH
-slurmstepd: error: *** JOB 2590737 ON n2267 CANCELLED AT 2022-03-13T04:39:16 DUE TO TIME LIMIT ***
