@@ -1,13 +1,11 @@
 # ThermoDrift™
-## Extremophile-protein-classification
-Our goal is to create a machine learning algorithm using ProThermDB (thermodynamic Database for Proteins and Mutants) to classify Extremeophilic proteins.
+Hi! Welcome to **ThermoDrift**, a user friendly tool to classify protein sequences as Thermophilic, Mesophilic, or Psychrophilic. This tool can be used for prediction, but is also an open ended tool for people to play with and adapt for the tasks they need.
 
+### Using the GUI:
+GUI Explanation here
 
-## GUI
+### Data processing for future model training:
+Data processing protocol here: where original trianing data came from, how you can use the saved pytorch tensors for training data
 
-## Data Loader
-
-## Training 
-
-
-
+### Running training:
+How to launch a training session
