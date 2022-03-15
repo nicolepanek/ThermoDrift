@@ -11,20 +11,9 @@ import Bio
 from Bio import Seq
 from Bio import SeqIO
 import torch
-import matplotlib.pyplot as plt
-import sys
 from torch.utils.data import TensorDataset, DataLoader
 import unittest
-import python_files.functions as functions
-
-
-# In[61]:
-
-
-#define data file paths for running tests locally
-thermo_path_test = 'data/thermo_test.fasta'
-psychro_path_test = 'data/psychro_test.fasta'
-meso_path_test = 'data/meso_test.fasta'
+import functions
 
 
 # In[64]:
@@ -34,18 +23,18 @@ meso_path_test = 'data/meso_test.fasta'
 class TestDataLoader(unittest.TestCase):
     
     #define data file paths for test fasta files which contain 10 examples each
-    thermo_path_test = 'data/thermo_test.fasta'
-    psychro_path_test = 'data/psychro_test.fasta'
-    meso_path_test = 'data/meso_test.fasta'
+    thermo_path_test = '../data/thermo_test.fasta'
+    psychro_path_test = '../data/psychro_test.fasta'
+    meso_path_test = '../data/meso_test.fasta'
     
     #define a test for the fasta_to_classified_df function
     def test_fasta_to_classified_df(self):
         #run the fasta_to_classified_df function on each test fasta file
-        self.df_thermo = functions.fasta_to_classified_df(thermo_path_test,'Thermophillic')
-        self.df_psychro = functions.fasta_to_classified_df(psychro_path_test,'Psychrophillic')
-        self.df_meso = functions.fasta_to_classified_df(meso_path_test,'Mesophillic')
+        self.df_thermo = functions.fasta_to_classified_df(self.thermo_path_test,'Thermophillic')
+        self.df_psychro = functions.fasta_to_classified_df(self.psychro_path_test,'Psychrophillic')
+        self.df_meso = functions.fasta_to_classified_df(self.meso_path_test,'Mesophillic')
         #count the number of sequences in the thermo fasta file manually
-        self.file = open(thermo_path_test,'r')
+        self.file = open(self.thermo_path_test,'r')
         self.count = 0
         for line in self.file:
             if line.startswith('>'):
