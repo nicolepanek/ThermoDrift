@@ -20,7 +20,7 @@ NOTE: GUI with passing model is not yet operational.
 
 To use the Thermodrift GUI, paste the following url into your browser: "thermodrift.pythonanywhere.com".
 
-Click the `UPLOAD FASTA FILE` button to upload a FASTA file containing your protein sequence(s) to be classified from your local computer. Each sequence will be passed through the model and a final table including the protein sequences and mesophillic, psychrophillic, or thermophillic classification. Clicking the `DOWNLOAD CSV` button will download this table as a .csv file titled "thermodrift_output.csv" onto your local computer. 
+Click the `UPLOAD FASTA FILE` button to upload a FASTA file containing the protein sequence(s) to be classified from your local computer. Each sequence will be passed through the model and display a final table including the protein sequences and their predicted mesophillic, psychrophillic, or thermophillic classification. Clicking the `DOWNLOAD CSV` button will download this table as a .csv file titled "thermodrift_output.csv" onto your local computer. 
 
 Note: if the wrong file type or a protein sequence with unknown characters is uploaded, the user with recieve an error notifying them of the issue and the model will not be run.  
 
