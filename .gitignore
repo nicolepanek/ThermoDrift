@@ -1,4 +1,10 @@
 slurm_out/
 *.log
 *.pt
-
+__pycache__/inference_script.cpython-38.pyc
+__pycache__/temp_model.cpython-38.pyc	
+__pycache__/thermodrift_model.cpython-38.pyc
+__pycache__/temp_model.cpython-38.pyc
+.gitignore
+model/inference_script_updated.py
+model/__pycache__/
