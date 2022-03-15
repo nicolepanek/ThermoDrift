@@ -8,8 +8,9 @@ import pandas as pd
 
 from dash.dependencies import Input, Output, State
 from dash import dcc, html, dash_table
-# dummy function for temporary model
 from temp_model import temp_model
+from inference_script import main
+
 # list of one letter amino acid codes
 list_aa = list("ARNDCQEGHILKMFPSTWYVUX_?-")
 
@@ -59,9 +60,10 @@ def parse_contents(contents, filename, date):
         else:
             # wrap decoded string contents as a stream
             fasta_contents = io.StringIO(decoded)
-            # call our dummy function
+
             global df 
-            df = temp_model(fasta_contents)
+            df = main(fasta_contents)
+
             return html.Div([
                              html.H5(filename),
                              html.H6(datetime.datetime.fromtimestamp(date)),
