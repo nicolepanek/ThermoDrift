@@ -90,7 +90,7 @@ def main(path):
 	#run the fasta_to_classified_df function
 	df_user = fasta_to_classified_df(path)
 	#run the filter_seqs function
-	df_filter = filter_seqs(df_combine)
+	df_filter = filter_seqs(df_user)
 	#extract the sequences from the df
 	seq_list = df_filter['sequence'].tolist()
 	#run the seq1hot function
