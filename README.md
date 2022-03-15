@@ -1,8 +1,9 @@
-# ThermoDrift
+
 <p align="center">
   <img src="images/thermodrift_logo.png" width='600' height='479' />
 </p>
 
+## ThermoDrift
 Hi! Welcome to **ThermoDrift**, a user friendly tool to classify protein sequences as Thermophilic, Mesophilic, or Psychrophilic. This tool can be used for prediction, but is also an open ended tool for people to play with and adapt for the tasks they need. Look at the figure below to see what temperatures these organisms live at.
 
 
