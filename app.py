@@ -16,7 +16,7 @@ list_aa = list("ARNDCQEGHILKMFPSTWYVUX_?-")
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 title = "ThermoDrift: Predict your protein's stability"
 heading1 = "Upload your protein FASTA File" 
-logo_filename = "thermodrift_logo.png"
+logo_filename = "images/thermodrift_logo.png"
 encoded_logo = base64.b64encode(open(logo_filename, 'rb').read())
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
