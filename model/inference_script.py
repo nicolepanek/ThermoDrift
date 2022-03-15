@@ -43,8 +43,8 @@ def filter_seqs(df_seqs):
                 good_list.append(seq)
         else:
             bad_list.append(seq)
-    boolean_series = df_combine.sequence.isin(good_list)
-    df_filter = df_combine[boolean_series]
+    boolean_series = df_seqs.sequence.isin(good_list)
+    df_filter = df_seqs[boolean_series]
     return df_filter
 
 # define the seq1hot function
