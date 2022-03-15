@@ -1,2 +1,4 @@
 slurm_out/
 *.log
+*.pt
+
