@@ -45,4 +45,4 @@ To launch the envrinoment to use the code please install the conda environment w
 
 <code>conda env create -f environment.yml</code>
 
-All CNN code is written in pytorch
+Code for model and functions is written with support from PyTorch, BIO, Numpy, Scipy, Pandas, Dash, and more...
