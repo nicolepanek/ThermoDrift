@@ -38,8 +38,10 @@ The TensorDatasets are converted into pyrotch Dataloaders using torch.utils.data
 The function returns the dataloaders train_loader and test_loader that can be fed into the CNN for training. 
 
 ### Running training:
-If youre interested in running training on a different dataset or playing around with the model, here's what to expect. The model is saved in a file called thermodrift_model.py and the training script is housed in train_script.py along with load_train_data.py which will load all of the training data. To run training, you will likely need to get access to a compute node. The training script is optimized to use GPUs if availible.
+If youre interested in running training on a different dataset or playing around with the model, here's what to expect. The model is saved in a file called thermodrift_model.py and the training script is housed in train_script.py along with load_train_data.py which will load all of the training data. To run training, you will likely need to get access to a compute node. The training script is optimized to use GPUs if availible. The architecture is pretty simple at the moment, but layer sizes can be changed to optimize training. This same model and architecture could also be used to train on other tasks to differentiate proteins as well. 
 
 To launch the envrinoment to use the code please install the conda environment with:
 
 <code>conda env create -f environment.yml</code>
+
+All CNN code is written in pytorch
