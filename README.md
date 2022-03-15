@@ -16,7 +16,13 @@ Thermodrift was created as an open source project that enables automated protein
 
 
 ### Using the GUI:
-GUI Explanation here
+To use the Thermodrift GUI, paste the following url into your browser: "thermodrift.pythonanywhere.com".
+
+Click the 'UPLOAD FASTA FILE' button to upload a FASTA file containing your protein sequence(s) to be classified from your local computer. Each sequence will be passed through the model and a final table including the protein sequences and mesophillic, psychrophillic, or thermophillic classification. 
+
+Clicking the "DOWNLOAD CSV" button will download this table as a .csv file titled "thermodrift_output.csv" onto your local computer. 
+
+Note: if the wrong file type or a protein sequence with unknown characters is uploaded, the user with recieve an error notifying them of the issue and the model will not be run.  
 
 ### Extracting training data from uniprot, processing and filtering data, and loading data into tensors:
 To train our model, we first harvested a plethora of protein sequences from mesophillic, psychrophillic, and thermophillic organisms from the uniprot protein database. To extract thermophillic sequences we obtained all the protein sequences from species named thermophillus. Similarly, we extracted mesophillic, and psychrophillic sequences from species named psychrophillus or mesophillus.  These sequences were saved as separate .fasta files (i.e. uniprot-thermophillus.fasta).  These .fasta files are located in the <code>data_loader/data/</code> folder.  
