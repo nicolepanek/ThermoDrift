@@ -19,16 +19,16 @@ Thermodrift was created as an open source project that enables automated protein
 GUI Explanation here
 
 ### Data processing from uniprot:
-How data was manipulated from sequence to one hot encoded sequence
+To train our model, we first harvested a plethora of protein sequences from mesophillic, psychrophillic, and thermophillic organisms from the uniprot protein database. To extract thermophillic sequences we obtained all the protein sequences from species named thermophillus. Similarly, we extracted mesophillic, and psychrophillic sequences from species named psychrophillus or mesophillus.  These sequences were saved as separate .fasta files (i.e. uniprot-thermophillus.fasta).  These fasta files were separately loaded into a pandas dataframe and classified manually as either thermophillic, mesophillic, or psychrophillic by adding a class column to each dataframe.  To make sure that the model was trained on equal numbers of thermo, meso, and psychro sequences we randomly sampled 1/5 of the thermo proteins because that dataset was 5x the size of the others.  This left us with 20k sequences per class.  Then we concatenated the three dataframes into a single combined dataframe.  Next, we filtered the combined dataframe to remove sequences that didn't start with methionine or were less than 75 amino acids long.  Next, we extracted the sequences and one hot encoded them.  Sequences that were longer than 500 amino acids were cropped.  Sequences that were between 75 amino acids and 500 amino acids were padded with zeros to make the length of every one hot enocded sequence 500 amino acids. The one hot encoded sequences were saved as a tensor (X_data.pt).  Next we one hot encoded the classes of each sequence.  This was saved as a tensor (y_data.pt).    
 
 
 ### Data processing for future model training:
-Processed pytorch tensors of one-hot encoded protein sequences and their respective classification (thermophilic, mesophilic, psychrophilic) make up the X and y input tensors. 
-X is a tensor of shape [2000, 500, 20]. This represents 2000 examples, where each example is a sequence of length 500 AA. Each AA in the sequence is one-hot encoded across the z-dimension. 
-y is a tensor of shape [2000, 1]. This represents 2000 examples, where each example contains a final classification.
+Processed pytorch tensors of one-hot encoded protein sequences and their respective classification (thermophilic, mesophilic, psychrophilic) make up the X_data and y_data input tensors. 
+X_data is a tensor of shape [20000, 500, 25]. This represents 20000 examples, where each example is a sequence of length 500 AA. Each AA in the sequence is one-hot encoded across the z-dimension. 
+y_data is a tensor of shape [20000, 3]. This represents 2000 examples, where each example contains a final classification.
 
 Functions to prepare data for training in CNN: 
-split_data(X, y) takes inputs of X and y tensors. The tensors are split 80/20 into training and testing sets, respectively. 
+split_data(X, y) takes inputs of X_data and y_data tensors. The tensors are split 80/20 into training and testing sets, respectively. 
 The training tensor dataset ("trainset") is formed by concatenating the X_train and y_train tensors into a pytorch TensorDataset.
 The testing tensor dataset ("testset") is formed by concatenating the X_test and y_test tensors into a pytorch TensorDataset.
 The function returns trainset and testset.
