@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="images/thermodrift_logo.png" width='600' height='479' />
+  <img src="images/thermodrift_logo.png" width='800' height='639' />
 </p>
 
 ## ThermoDrift
