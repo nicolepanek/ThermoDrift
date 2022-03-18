@@ -12,7 +12,7 @@ Hi! Welcome to **ThermoDrift**, a user friendly tool to classify protein sequenc
 </p>
 
 ### Why Thermodrift: 
-Thermodrift was created as an open source project that enables automated protein classification for thermophilic, mesophilic, or psychrophilic phenotypes to address the lack of any computational classifiers for thermostable protein prediction that are wisely accessible and cater to a scientific user base with little machine learning experience but a lot of enthusiasm for protein characterization. 
+Thermodrift was created as an open source project that enables automated protein classification for thermophilic, mesophilic, or psychrophilic phenotypes to address the lack of any computational classifiers for thermostable protein prediction that are widely accessible and cater to a scientific user base with little machine learning experience but a lot of enthusiasm for protein characterization. 
 
 
 ### Using the GUI:
