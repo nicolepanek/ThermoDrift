@@ -12,7 +12,7 @@ Hi! Welcome to **ThermoDrift**, a user friendly tool to classify protein sequenc
 </p>
 
 ### Why Thermodrift: 
-Thermodrift was created as an open source project that enables automated protein classification for thermophilic, mesophilic, or psychrophilic phenotypes to address the lack of any computational classifiers for thermostable protein prediction that are wisely accessible and cater to a scientific user base with little machine learning experience but a lot of enthusiasm for protein characterization. 
+Thermodrift was created as an open source project that enables automated protein classification for thermophilic, mesophilic, or psychrophilic phenotypes to address the lack of any computational classifiers for thermostable protein prediction that are widely accessible and cater to a scientific user base with little machine learning experience but a lot of enthusiasm for protein characterization. 
 
 
 ### Using the GUI:
@@ -34,8 +34,8 @@ The functions to process the training data are stored in <code>data_loader/pytho
 
 ### Data processing for future model training:
 Processed pytorch tensors of one-hot encoded protein sequences and their respective classification (thermophilic, mesophilic, psychrophilic) make up the X_data.pt and y_data.pt input tensors. 
-X_data.pt is a tensor of shape [20000, 500, 25]. This represents 20000 examples, where each example is a sequence of length 500 AA. Each AA in the sequence is one-hot encoded across the z-dimension. 
-y_data.pt is a tensor of shape [20000, 3]. This represents 2000 examples, where each example contains a final classification.
+X_data.pt is a tensor of shape [60000, 500, 25]. This represents 60,000 examples, where each example is a sequence of length 500 AA. Each AA in the sequence is one-hot encoded across the z-dimension. 
+y_data.pt is a tensor of shape [60000, 3]. This represents 60,000 examples, where each example contains a final classification.
 
 Functions to prepare data for training in CNN: 
 split_data(X, y) takes inputs of X_data and y_data tensors. The tensors are split 80/20 into training and testing sets, respectively. 
