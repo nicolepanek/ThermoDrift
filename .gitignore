@@ -8,3 +8,4 @@ __pycache__/temp_model.cpython-38.pyc
 .gitignore
 model/inference_script_updated.py
 model/__pycache__/
+__pycache__/*
