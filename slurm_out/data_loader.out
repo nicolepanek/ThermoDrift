@@ -1,0 +1,35 @@
+discarding /usr/lusers/achazing/anaconda3/bin from PATH
+prepending /usr/lusers/achazing/anaconda3/envs/thermo_env/bin to PATH
+Traceback (most recent call last):
+  File "/usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/serialization.py", line 379, in save
+    _save(obj, opened_zipfile, pickle_module, pickle_protocol)
+  File "/usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/serialization.py", line 499, in _save
+    zip_file.write_record(name, storage.data_ptr(), num_bytes)
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "Data_loader.py", line 193, in <module>
+    torch.save(X_data, '/gscratch/stf/achazing/tensor_x.pt') #download tensor to share for training
+  File "/usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/serialization.py", line 380, in save
+    return
+  File "/usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/serialization.py", line 259, in __exit__
+    self.file_like.write_end_of_file()
+RuntimeError: [enforce fail at inline_container.cc:300] . unexpected pos 320 vs 245
+terminate called after throwing an instance of 'c10::Error'
+  what():  [enforce fail at inline_container.cc:300] . unexpected pos 320 vs 245
+frame #0: c10::ThrowEnforceNotMet(char const*, int, char const*, std::string const&, void const*) + 0x47 (0x2abec717cae7 in /usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x2785a20 (0x2abe6d89aa20 in /usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x2780ffc (0x2abe6d895ffc in /usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: caffe2::serialize::PyTorchStreamWriter::writeRecord(std::string const&, void const*, unsigned long, bool) + 0xb5 (0x2abe6d89dc65 in /usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/lib/libtorch_cpu.so)
+frame #4: caffe2::serialize::PyTorchStreamWriter::writeEndOfFile() + 0x173 (0x2abe6d89df53 in /usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/lib/libtorch_cpu.so)
+frame #5: caffe2::serialize::PyTorchStreamWriter::~PyTorchStreamWriter() + 0x125 (0x2abe6d89e1c5 in /usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/lib/libtorch_cpu.so)
+frame #6: <unknown function> + 0xb43593 (0x2abe6a131593 in /usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/lib/libtorch_python.so)
+frame #7: <unknown function> + 0x2a6aa8 (0x2abe69894aa8 in /usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/lib/libtorch_python.so)
+frame #8: <unknown function> + 0x2a7dae (0x2abe69895dae in /usr/lusers/achazing/anaconda3/envs/thermo_env/lib/python3.6/site-packages/torch/lib/libtorch_python.so)
+<omitting python frames>
+frame #18: __libc_start_main + 0xf5 (0x2abe513c6555 in /lib64/libc.so.6)
+frame #19: python() [0x4009e9]
+
+/var/spool/slurm/d/job2585827/slurm_script: line 12: 18264 Aborted                 (core dumped) python -u Data_loader.py >> processing.log
