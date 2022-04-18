@@ -20,13 +20,12 @@ import thermodrift_model
 #the fasta_to_classified_df function; which inputs fasta seqs and classifies them in a df
 def fasta_to_classified_df(fasta_path):
     seq_dict = {}  #define empty dict to store sequence ids and sequences
-    with open(fasta_path) as fasta_file:  # Will close handle cleanly
-        identifiers = []   #define empty id list 
-        sequence = []   #define empty seq list 
-        for seq_record in SeqIO.parse(fasta_path, 'fasta'):  # (generator)
-            identifiers.append(str(seq_record.id))    #append ids to id list
-            sequence.append(str(seq_record.seq))    #append seqs to seq list
-            seq_dict[str(seq_record.id)] = str(seq_record.seq)    #define an ID, seq dictionary
+    identifiers = []   #define empty id list 
+    sequence = []   #define empty seq list 
+    for seq_record in SeqIO.parse(fasta_path, 'fasta'):  # (generator)
+        identifiers.append(str(seq_record.id))    #append ids to id list
+        sequence.append(str(seq_record.seq))    #append seqs to seq list
+        seq_dict[str(seq_record.id)] = str(seq_record.seq)    #define an ID, seq dictionary
     seq_list = list(seq_dict.items())  #enumerate the dictionary
     df_seqs = pd.DataFrame(seq_list)    #create a df from enumerated dictionary
     df_seqs.columns = ['protein','sequence']    #define column names
@@ -43,8 +42,8 @@ def filter_seqs(df_seqs):
                 good_list.append(seq)
         else:
             bad_list.append(seq)
-    boolean_series = df_combine.sequence.isin(good_list)
-    df_filter = df_combine[boolean_series]
+    boolean_series = df_seqs.sequence.isin(good_list)
+    df_filter = df_seqs[boolean_series]
     return df_filter
 
 # define the seq1hot function
@@ -87,24 +86,39 @@ def forward_pass(data):
 def main(path):
 	#Dataloading functions:
 
+    # define classification dictionary
+    class_dict = {0: 'thermophile', 1: 'mesophile', 2: 'psychrophile'}
+    
 	#run the fasta_to_classified_df function
-	df_user = fasta_to_classified_df(path)
-	#run the filter_seqs function
-	df_filter = filter_seqs(df_user)
-	#extract the sequences from the df
-	seq_list = df_filter['sequence'].tolist()
-	#run the seq1hot function
-	X_data = seq1hot(seq_list)
+    df_user = fasta_to_classified_df(path)
+    #run the filter_seqs function
+    df_filter = filter_seqs(df_user)
+    #extract the sequences from the df
+    seq_list = df_filter['sequence'].tolist()
+    #run the seq1hot function
+    X_data = seq1hot(seq_list)
 
-
-
-
-
-
-
-
-	#forward pass
+    #forward pass
     predicted, raw_out = forward_pass(X_data)
 
-    return predicted, raw_out
+    predictions = []
+    for i in range(predicted.size()[0]):
+        pred = class_dict[int(predicted[i])]
+        predictions.append(pred)
+
+    class_0_prob = []
+    class_1_prob = []
+    class_2_prob = []
+    for i in range(raw_out.size()[0]):
+        class_0_prob.append(float(raw_out[i,0]))
+        class_1_prob.append(float(raw_out[i,1]))
+        class_2_prob.append(float(raw_out[i,2]))
+
+    df_user['prediction'] = predictions
+    df_user['thermophile probability'] = class_0_prob
+    df_user['mesophile probability'] = class_1_prob
+    df_user['psychrophile probability'] = class_2_prob
+        
+    return df_user
 		
+

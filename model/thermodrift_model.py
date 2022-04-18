@@ -52,7 +52,9 @@ class Net(nn.Module):
 			nn.Dropout(p=0.5),
 			nn.Linear(200, 500),
 			nn.ReLU(inplace=True),
-			nn.Linear(500, 3))
+			nn.Linear(500, 3),
+            nn.Softmax(dim=1)
+            )
 
 
 	def forward(self, x):
