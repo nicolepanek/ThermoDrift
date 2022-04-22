@@ -53,20 +53,12 @@ class Net(nn.Module):
             nn.Linear(500, 3))
 
     def forward(self, x):
-        #print('x forward: ', x.size())
-        # Apply the feature extractor in the input
-        #print('x type: ', x.type())
         x = self.features(x.float())
-        #print('x from features: ', x.size())
         out_size = torch.tensor(x.size())
     # Squeeze the three spatial dimensions in one
-    #x = x.view(-1, 7 * 7 * 40)
         x = x.view(-1, torch.prod(out_size[1:]))
-        #print('after squeeze: ', x.size())
     # Classify the images
         lin = nn.Linear(torch.prod(out_size[1:]), 200)
         x = lin(x)
-        #print('x lin: ', x.size())
         x = self.classifier(x)
-        #print('after classifier: ', x.size())
         return x
