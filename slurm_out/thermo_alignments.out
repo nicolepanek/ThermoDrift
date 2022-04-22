@@ -1,0 +1,3 @@
+Error: no such directory: /usr/lusers/achazing/thermo_proteins/ThermoDrift/environments/buwei_python_envs/bin
+  File "/usr/lusers/achazing/thermo_proteins/ThermoDrift/environments/buwei_python_envs", line 1
+SyntaxError: Non-UTF-8 code starting with '\x80' in file /usr/lusers/achazing/thermo_proteins/ThermoDrift/environments/buwei_python_envs on line 2, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
