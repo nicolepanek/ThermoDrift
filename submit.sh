@@ -5,14 +5,14 @@
 #SBATCH --nodes=1
 #SBATCH --time=12:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem=30G
+#SBATCH --mem=20G
 #SBATCH -o ./slurm_out/slurm_%j.out # STDOUT
 
 script='/usr/lusers/jgershon/ThermoDrift/train_script.py'
 main_dir='/gscratch/stf/jgershon/experiments'
 
 #Name experiment here
-experiment_dir='medium_widthv2'
+experiment_dir='medium_widthv8'
 
 #Code to see if experiment name already exists
 if [ -d "$main_dir/$experiment_dir" ]
@@ -24,7 +24,7 @@ echo "Making new directory for $experiment_dir"
 mkdir "$main_dir/$experiment_dir"
 mkdir "$main_dir/$experiment_dir/save_model"
 
-indir='/gscratch/stf/jgershon/experiments/medium_widthv1/save_model/model_3000.pt'
+indir='/gscratch/stf/jgershon/experiments/medium_widthv6/save_model/model_2000.pt'
 outdir="$main_dir/$experiment_dir/"
 
 autopep8 --in-place /usr/lusers/jgershon/ThermoDrift/train_script.py
