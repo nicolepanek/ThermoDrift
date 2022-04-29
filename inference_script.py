@@ -74,13 +74,35 @@ def forward_pass(data):
     #Load model from saved outputs
     model_save_path = 'INSERT MODEL PATH HERE WHEN READY'
     model = thermodrift_model.Net()
-    if os.path .isfile(model_save_path):
+    if os.path.isfile(model_save_path):
         model.load_state_dict(torch.load(PATH))
     
     outputs = model(data.unsqueeze(1))
     predicted = torch.max(outputs.data, 1)[1]
     raw_out = outputs.data
     return predicted, raw_out
+
+def forward_pass_analysis(x, y):
+    '''
+    Input data in shape [N,L,25]
+    will process data through the model and then predict
+    '''
+    #Load model from saved outputs
+    model_out = []
+	model_save_path = 'INSERT MODEL PATH HERE WHEN READY'
+    model = thermodrift_model.Net()
+    if os.path.isfile(model_save_path):
+        model.load_state_dict(torch.load(PATH))
+   	for i in range(x.shape[0]): 
+		print('Now running example ',i)
+		outputs = model(x[i].unsqueeze(1))
+		predicted = torch.max(outputs.data, 1)[1]
+		raw_out = outputs.data
+		model_out.append((predicted,raw_out,y[i]))
+		
+   
+	torch.save(model_out,'PATH TO WHERE YOU WANT TO SAVE')
+	print('outputs saved')	 
 
 
 def main(path):
