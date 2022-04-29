@@ -63,6 +63,12 @@ def parse_contents(contents, filename, date):
 
             global df 
             df = main(fasta_contents)
+            df = df[['protein',
+            'prediction',
+            'thermophile probability',
+            'mesophile probability',
+            'psychrophile probability',
+            'sequence']]
 
             return html.Div([
                              html.H5(filename),
