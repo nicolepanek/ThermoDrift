@@ -15,8 +15,7 @@ from inference_script import main
 list_aa = list("ARNDCQEGHILKMFPSTWYVUX_?-")
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-title = "ThermoDrift: Predict your protein's stability"
-heading1 = "Upload your protein FASTA File" 
+title = "ThermoDrift: Predict protein stability"
 logo_filename = "images/thermodrift_logo.png"
 encoded_logo = base64.b64encode(open(logo_filename, 'rb').read())
 
@@ -26,21 +25,51 @@ app.layout = html.Div([
                        # title & headings & logo
                        html.Img(src='data:image/png;base64,{}'.format(encoded_logo.decode()), height=300),
                        html.H1(title),
-                       html.H4(heading1),
-                       # Upload fasta file
-                       dcc.Upload(
-                           id='upload-data',
-                           children=html.Div([
-                                              html.Button('Upload FASTA File')
-                                              ]),
-                           multiple=True
-                           ),
-                       html.Div(id='output-data-upload'),
-                       #Button to download .csv of output data
-                       html.Hr(),
-                       html.Button("Download CSV", id="btn_csv"),
-                       dcc.Download(id="download-dataframe-csv"),
+                       # Tabs
+                       dcc.Tabs(id="tabs-example", value='tab-1',
+                        children=[
+                        dcc.Tab(label='About ThermoDrift', value='tab-1'),
+                        dcc.Tab(label='Sequence prediction', value='tab-2'),
+                        ]),
+                       html.Div(id='tabs-content')
                        ])
+@app.callback(Output('tabs-content', 'children'),
+              Input('tabs-example', 'value'))
+
+def render_content(tab):
+  if tab == 'tab-1':
+    return html.Div([
+      html.H4(className='what-is', children='What is ThermoDrift?'),
+      html.P(
+        'ThermoDrift is a user friendly tool to classify '
+        'protein sequences as Thermophilic, Mesophilic, or Psychrophilic. '
+        'This tool can be used for prediction, but is also an open ended '
+        'tool for people to play with and adapt for the tasks they need. '
+        'Look at the figure below to see what temperatures these organisms '
+        'live at.'),
+      html.P(
+        'Thermodrift was created as an open source project that enables '
+        'automated protein classification for thermophilic, mesophilic, or '
+        'psychrophilic phenotypes to address the lack of any computational '
+        'classifiers for thermostable protein prediction that are widely '
+        'accessible and cater to a scientific user base with little machine '
+        'learning experience but a lot of enthusiasm for protein characterization.'),
+      ])
+  elif tab == 'tab-2':
+    return html.Div([
+      html.H4("Upload your protein FASTA File"),
+      # Upload fasta file
+      dcc.Upload(id='upload-data',
+        children=html.Div([
+          html.Button('Upload FASTA File')
+          ]),
+        multiple=True),
+      html.Div(id='output-data-upload'),
+      #Button to download .csv of output data
+      html.Hr(),
+      html.Button("Download CSV", id="btn_csv"),
+      dcc.Download(id="download-dataframe-csv"),])
+
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
@@ -58,7 +87,7 @@ def parse_contents(contents, filename, date):
                                      Please format protein sequence in fasta file with one-letter amino acid codes.
                              """])
         else:
-            # wrap decoded string contents as a stream
+        # wrap decoded string contents as a stream
             fasta_contents = io.StringIO(decoded)
 
             global df 
@@ -71,33 +100,42 @@ def parse_contents(contents, filename, date):
             'sequence']]
 
             return html.Div([
-                             html.H5(filename),
-                             html.H6(datetime.datetime.fromtimestamp(date)),
-                             dash_table.DataTable(
-                                 df.to_dict('records'),
-                                 [{'name': i, 'id': i} for i in df.columns]
-                                 ),
-                             html.Hr(),  # horizontal line
-                             # For debugging, display the raw contents provided by the web browser
-                             html.Div('Raw Content'),
-                             html.Pre(contents[0:200] + '...',
-                                      style={
-                                          'whiteSpace': 'pre-wrap',
-                                          'wordBreak': 'break-all'
-                                          })
-                             ])
-                               
-                             
+              html.H5(filename),
+              html.H6(datetime.datetime.fromtimestamp(date)),
+              dash_table.DataTable(df.to_dict('records'),
+                [{'name': i, 'id': i} for i in df.columns],
+                style_cell={'textAlign': 'left',
+                'padding': '5px'},
+                style_header={'backgroundColor': 'white',
+                'fontWeight': 'bold'
+                }
+                ),
+              html.Hr(),
+              # For debugging, display the raw contents provided by the web browser
+              html.Div('Raw Content'),
+              html.Pre(contents[0:200] + '...',
+                style={
+                'whiteSpace': 'pre-wrap',
+                'wordBreak': 'break-all'
+                })
+              ])
+
     else:
         return html.Div(["""
                          Error: Wrong file type uploaded. 
                                 Please upload a FASTA file.
                          """])
-                     
+
+
+
+
+
 @app.callback(Output('output-data-upload', 'children'), 
               Input('upload-data', 'contents'),
               State('upload-data', 'filename'),
               State('upload-data', 'last_modified'))
+
+
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
@@ -111,6 +149,7 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
     #State('output-data-upload', 'children'),
     prevent_initial_call=True,
 )
+
 def func(n_clicks):
     return dcc.send_data_frame(df.to_csv, "thermodrift_output.csv")
 
