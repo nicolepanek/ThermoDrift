@@ -8,8 +8,6 @@ import torch.nn as nn
 from torch.autograd import Variable
 
 
-
-
 class Net(nn.Module):
 	def __init__(self):
 		super(Net, self).__init__()
