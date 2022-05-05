@@ -8,8 +8,8 @@ import pandas as pd
 
 from dash.dependencies import Input, Output, State
 from dash import dcc, html, dash_table
-from temp_model import temp_model
-from inference_script import main
+#from temp_model import temp_model
+#from inference_script import main
 
 # list of one letter amino acid codes
 list_aa = list("ARNDCQEGHILKMFPSTWYVUX_?-")
@@ -20,18 +20,18 @@ logo_filename = "images/thermodrift_logo.png"
 encoded_logo = base64.b64encode(open(logo_filename, 'rb').read())
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
+app.config['suppress_callback_exceptions'] = True
 app.layout = html.Div([# title & headings & logo
-                       html.Img(src='data:image/png;base64,{}'.format(encoded_logo.decode()), height=300),
-                       html.H1(title),
+                       #html.Img(src='data:image/png;base64,{}'.format(encoded_logo.decode()), height=300),
+                       #html.H1(title),
                        # Tabs
                        dcc.Tabs(
-                        id='tabs',
-                        value='tab-2',
+                        id='tabs-all',
+                        value='about-thermodrift',
                         children=[
                             dcc.Tab(
                                 label='About ThermoDrift',
-                                value='about-thermodrift'
+                                value='about-thermodrift',
                                 ),
                             dcc.Tab(
                                 label='Sequence Prediction',
@@ -42,6 +42,7 @@ app.layout = html.Div([# title & headings & logo
 
                        ])
                        
+
 
 def render_content(tab):
     if tab == 'about-thermodrift':
@@ -60,12 +61,13 @@ def render_content(tab):
                 'psychrophilic phenotypes to address the lack of any computational '
                 'classifiers for thermostable protein prediction that are widely '
                 'accessible and cater to a scientific user base with little machine '
-                'learning experience but a lot of enthusiasm for protein characterization.'),
+                'learning experience but a lot of enthusiasm for protein characterization.')
             ])
     elif tab == 'sequence-prediction':
         return html.Div([
             html.H4("Upload protein FASTA File"),
             # Upload fasta file
+            html.Hr(),
             dcc.Upload(
                 id='upload-data',
                 children=html.Div([
@@ -88,9 +90,10 @@ def render_content(tab):
             html.Div(id='output-data-upload'),
             # Download csv of output data
             html.Button('Download CSV', id='btn_csv'),
-            dcc.Download(id='download-dataframe-csv'),
+            dcc.Download(id='download-dataframe-csv')
 
             ])
+
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
@@ -120,25 +123,24 @@ def parse_contents(contents, filename, date):
             'sequence']]
 
             return html.Div([
-              html.H5(filename),
-              html.H6(datetime.datetime.fromtimestamp(date)),
-              dash_table.DataTable(df.to_dict('records'),
-                [{'name': i, 'id': i} for i in df.columns],
-                style_cell={'textAlign': 'left',
-                'padding': '5px'},
-                style_header={'backgroundColor': 'white',
-                'fontWeight': 'bold'
-                }
-                ),
-              html.Hr(), # horizontal line
-              # For debugging, display the raw contents provided by the web browser
-              html.Div('Raw Content'),
-              html.Pre(contents[0:200] + '...',
-                style={
-                'whiteSpace': 'pre-wrap',
-                'wordBreak': 'break-all'
-                })
-              ])
+                html.H5(filename),
+                html.H6(datetime.datetime.fromtimestamp(date)),
+                dash_table.DataTable(df.to_dict('records'),
+                    [{'name': i, 'id': i} for i in df.columns],
+                    style_cell={'textAlign': 'left',
+                    'padding': '5px'},
+                    style_header={'backgroundColor': 'white',
+                    'fontWeight': 'bold'}
+                    ),
+                html.Hr(), # horizontal line
+                # For debugging, display the raw contents provided by the web browser
+                html.Div('Raw Content'),
+                html.Pre(contents[0:200] + '...',
+                    style={
+                    'whiteSpace': 'pre-wrap',
+                    'wordBreak': 'break-all'
+                    })
+                ])
 
     else:
         return html.Div(["""
@@ -146,37 +148,35 @@ def parse_contents(contents, filename, date):
                                 Please upload a FASTA file.
                          """])
 
+# display tabs
+@app.callback(
+    Output('tabs-content', 'children'),
+    Input('tabs-all', 'value')
+    )
 
-def callbacks(_app):
-    # display tabs
-    @_app.callback(Output('tabs-content', 'children'),
-        Input('tabs', 'value'))
+# upload 
+@app.callback(
+    Output('output-data-upload', 'children'),
+    Input('upload-data', 'contents'),
+    State('upload-data', 'filename'),
+    State('upload-data', 'last_modified'),
+    suppress_callback_exceptions=True
+    )
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+    return children
 
-    # upload 
-    @_app.callback(Output('output-data-upload', 'children'), 
-              Input('upload-data', 'contents'),
-              State('upload-data', 'filename'),
-              State('upload-data', 'last_modified'))
-
-    def update_output(list_of_contents, list_of_names, list_of_dates):
-        if list_of_contents is not None:
-            children = [
-                parse_contents(c, n, d) for c, n, d in
-                zip(list_of_contents, list_of_names, list_of_dates)]
-        return children
-
-    # download
-    @_app.callback(
-        Output("download-dataframe-csv", "data"),
-        Input("btn_csv", "n_clicks"),
-        prevent_initial_call=True,
-        )
-
-    def func(n_clicks):
-        return dcc.send_data_frame(df.to_csv, "thermodrift_output.csv")
-
-
-
+# download
+@app.callback(
+    Output("download-dataframe-csv", "data"),
+    Input("btn_csv", "n_clicks"),
+    prevent_initial_call=True
+    )
+def func(n_clicks):
+    return dcc.send_data_frame(df.to_csv, "thermodrift_output.csv")
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8050)                     
