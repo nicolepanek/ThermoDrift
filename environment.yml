@@ -4,11 +4,8 @@ channels:
 dependencies:
   - numpy
   - pandas
-  - torch
+  - pytorch
   - dash
   - matplotlib
-  - Bio
-  - torch.nn
-  - torch.optim
-  - torch.autograd 
+  - biopython
 prefix: /opt/anaconda3/envs/thermo_drift_env
