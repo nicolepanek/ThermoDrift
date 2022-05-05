@@ -21,55 +21,76 @@ encoded_logo = base64.b64encode(open(logo_filename, 'rb').read())
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-app.layout = html.Div([
-                       # title & headings & logo
+app.layout = html.Div([# title & headings & logo
                        html.Img(src='data:image/png;base64,{}'.format(encoded_logo.decode()), height=300),
                        html.H1(title),
                        # Tabs
-                       dcc.Tabs(id="tabs-example", value='tab-1',
+                       dcc.Tabs(
+                        id='tabs',
+                        value='tab-2',
                         children=[
-                        dcc.Tab(label='About ThermoDrift', value='tab-1'),
-                        dcc.Tab(label='Sequence prediction', value='tab-2'),
-                        ]),
+                            dcc.Tab(
+                                label='About ThermoDrift',
+                                value='about-thermodrift'
+                                ),
+                            dcc.Tab(
+                                label='Sequence Prediction',
+                                value='sequence-prediction',
+                                ),
+                            ]),
                        html.Div(id='tabs-content')
+
                        ])
-@app.callback(Output('tabs-content', 'children'),
-              Input('tabs-example', 'value'))
+                       
 
 def render_content(tab):
-  if tab == 'tab-1':
-    return html.Div([
-      html.H4(className='what-is', children='What is ThermoDrift?'),
-      html.P(
-        'ThermoDrift is a user friendly tool to classify '
-        'protein sequences as Thermophilic, Mesophilic, or Psychrophilic. '
-        'This tool can be used for prediction, but is also an open ended '
-        'tool for people to play with and adapt for the tasks they need. '
-        'Look at the figure below to see what temperatures these organisms '
-        'live at.'),
-      html.P(
-        'Thermodrift was created as an open source project that enables '
-        'automated protein classification for thermophilic, mesophilic, or '
-        'psychrophilic phenotypes to address the lack of any computational '
-        'classifiers for thermostable protein prediction that are widely '
-        'accessible and cater to a scientific user base with little machine '
-        'learning experience but a lot of enthusiasm for protein characterization.'),
-      ])
-  elif tab == 'tab-2':
-    return html.Div([
-      html.H4("Upload your protein FASTA File"),
-      # Upload fasta file
-      dcc.Upload(id='upload-data',
-        children=html.Div([
-          html.Button('Upload FASTA File')
-          ]),
-        multiple=True),
-      html.Div(id='output-data-upload'),
-      #Button to download .csv of output data
-      html.Hr(),
-      html.Button("Download CSV", id="btn_csv"),
-      dcc.Download(id="download-dataframe-csv"),])
+    if tab == 'about-thermodrift':
+        return html.Div([
+            html.H4('What is ThermoDrift?'),
+            html.P(
+                'ThermoDrift is a user friendly tool to classify '
+                'protein sequences as Thermophilic, Mesophilic, or Psychrophilic. '
+                'This tool can be used for prediction, but is also an open ended '
+                'tool for people to play with and adapt for the tasks they need. '
+                'Look at the figure below to see what temperatures these organisms '
+                'live at.'),
+            html.P(
+                'Thermodrift was created as an open source project that enables '
+                'automated protein classification for thermophilic, mesophilic, or '
+                'psychrophilic phenotypes to address the lack of any computational '
+                'classifiers for thermostable protein prediction that are widely '
+                'accessible and cater to a scientific user base with little machine '
+                'learning experience but a lot of enthusiasm for protein characterization.'),
+            ])
+    elif tab == 'sequence-prediction':
+        return html.Div([
+            html.H4("Upload protein FASTA File"),
+            # Upload fasta file
+            dcc.Upload(
+                id='upload-data',
+                children=html.Div([
+                    'Drag and Drop or ',
+                    html.A('Select Files')
+                    ]),
+                style={
+                'width': '100%',
+                'height': '60px',
+                'lineHeight': '60px',
+                'borderWidth': '1px',
+                'borderStyle': 'dashed',
+                'borderRadius': '5px',
+                'textAlign': 'center',
+                'margin': '10px'
+                },
+                # allow multiple files to be uploaded
+                multiple=True
+                ),
+            html.Div(id='output-data-upload'),
+            # Download csv of output data
+            html.Button('Download CSV', id='btn_csv'),
+            dcc.Download(id='download-dataframe-csv'),
 
+            ])
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
@@ -78,7 +99,6 @@ def parse_contents(contents, filename, date):
     if 'fasta' in filename:
         # decode user uploaded fasta contents
         decoded = base64.b64decode(content_string.split(',')[-1].encode('ascii')).decode()
-
         # check if sequence has characters not within amino acid one-letter codes
         fasta_seq =list(decoded.split('\n')[1])
         if all(x in list_aa for x in fasta_seq) == False:
@@ -110,7 +130,7 @@ def parse_contents(contents, filename, date):
                 'fontWeight': 'bold'
                 }
                 ),
-              html.Hr(),
+              html.Hr(), # horizontal line
               # For debugging, display the raw contents provided by the web browser
               html.Div('Raw Content'),
               html.Pre(contents[0:200] + '...',
@@ -127,31 +147,36 @@ def parse_contents(contents, filename, date):
                          """])
 
 
+def callbacks(_app):
+    # display tabs
+    @_app.callback(Output('tabs-content', 'children'),
+        Input('tabs', 'value'))
 
-
-
-@app.callback(Output('output-data-upload', 'children'), 
+    # upload 
+    @_app.callback(Output('output-data-upload', 'children'), 
               Input('upload-data', 'contents'),
               State('upload-data', 'filename'),
               State('upload-data', 'last_modified'))
 
-
-def update_output(list_of_contents, list_of_names, list_of_dates):
+    def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
 
-@app.callback(
-    Output("download-dataframe-csv", "data"),
-    Input("btn_csv", "n_clicks"),
-    #State('output-data-upload', 'children'),
-    prevent_initial_call=True,
-)
+    # download
+    @_app.callback(
+        Output("download-dataframe-csv", "data"),
+        Input("btn_csv", "n_clicks"),
+        prevent_initial_call=True,
+        )
 
-def func(n_clicks):
-    return dcc.send_data_frame(df.to_csv, "thermodrift_output.csv")
+    def func(n_clicks):
+        return dcc.send_data_frame(df.to_csv, "thermodrift_output.csv")
+
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8050)                     
