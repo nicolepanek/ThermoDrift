@@ -233,6 +233,7 @@ for epoch in range(num_epochs):
             # Print Loss
             print('Iteration: {}  Train Loss: {}  Test Accuracy: {} %'.format(
                 count, loss.data, accuracy))
-            path = outdir+'save_model/model_'+str(count)+'.pt'
+            path = os.path.join(outdir, 'save_model/',
+                                'model_'+str(count)+'.pt')
             torch.save(model.state_dict(), path)
             print('Model '+str(count)+' was saved.')
