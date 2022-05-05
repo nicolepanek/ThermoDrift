@@ -10,3 +10,4 @@ model/inference_script_updated.py
 model/__pycache__/
 __pycache__/*
 experiments/
+train.log

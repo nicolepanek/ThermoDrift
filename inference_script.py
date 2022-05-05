@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
 
-import ipdb
+#import ipdb
 
 import thermodrift_model
 
@@ -67,22 +67,25 @@ def seq1hot(seq_list):
     return X_data
 
 
+##########################################
+## temporary model pass to demo the GUI ##
+##########################################
 
-def forward_pass(data):
-    '''
-    Input data in shape [N,L,25]
-    will process data through the model and then predict
-    '''
-    #Load model from saved outputs
-    model_save_path = '/usr/lusers/aultl/ThermoDrift/thermodrift_model.py'
-    model = thermodrift_model.Net()
-    if os.path.isfile(model_save_path):
-        model.load_state_dict(torch.load(PATH))
+# def forward_pass(data):
+#     '''
+#     Input data in shape [N,L,25]
+#     will process data through the model and then predict
+#     '''
+#     #Load model from saved outputs
+#     model_save_path = '/usr/lusers/aultl/ThermoDrift/thermodrift_model.py'
+#     model = thermodrift_model.Net()
+#     if os.path.isfile(model_save_path):
+#         model.load_state_dict(torch.load(PATH))
     
-    outputs = model(data.unsqueeze(1))
-    predicted = torch.max(outputs.data, 1)[1]
-    raw_out = outputs.data
-    return predicted, raw_out
+#     outputs = model(data.unsqueeze(1))
+#     predicted = torch.max(outputs.data, 1)[1]
+#     raw_out = outputs.data
+#     return predicted, raw_out
 
 def forward_pass_analysis(x, y):
     '''
@@ -91,21 +94,21 @@ def forward_pass_analysis(x, y):
     '''
     #Load model from saved outputs
     model_out = []
-    model_save_path = '/usr/lusers/aultl/ThermoDrift/thermodrift_model.py'
+    model_save_path = '/gscratch/stf/jgershon/experiments/medium_widthv8/save_model/model_1500.pt'
     model = thermodrift_model.Net()
-    if os.path.isfile(model_save_path):
-        model.load_state_dict(torch.load(PATH))
-        ipdb.set_trace()
-#   	for i in range(x.shape[0]): 
-#            print('Now running example ',i)
-#            outputs = model(x[i].unsqueeze(1))
-#            predicted = torch.max(outputs.data, 1)[1]
-#            raw_out = outputs.data
-#            model_out.append((predicted,raw_out,y[i]))
-		
-   
-#        torch.save(model_out,'/usr/lusers/aultl/ThermoDrift/model_eval/20220429_forward_pass_analysis')
-#	print('outputs saved')	 
+    
+    model.load_state_dict(torch.load(model_save_path))
+        
+    ### named tuple for organized data set output ###
+    for i in range(x.shape[0]): 
+        print('Now running example ',i)
+        outputs = model(x[i].unsqueeze(1))
+        predicted = torch.max(outputs.data, 1)[1]
+        raw_out = outputs.data
+        model_out.append((predicted,raw_out,y[i]))
+		   
+    torch.save(model_out,'/usr/lusers/aultl/ThermoDrift/model_eval/20220429_forward_pass_analysis')
+    print('outputs saved')	 
 
 
 def main(path):
