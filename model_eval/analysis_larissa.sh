@@ -6,7 +6,7 @@
 #SBATCH --time=12:00:00
 #SBATCH --ntasks=1
 #SBATCH --mem=10G
-#SBATCH -o ~/slurm_out/slurm_%j.out # STDOUT
+##SBATCH -o ~/slurm_out/slurm_%j.out # STDOUT
 
 set -x # put every command after into slurm_out job log 
 
