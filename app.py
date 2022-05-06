@@ -8,8 +8,8 @@ import pandas as pd
 
 from dash.dependencies import Input, Output, State
 from dash import dcc, html, dash_table
-#from temp_model import temp_model
-#from inference_script import main
+from temp_model import temp_model
+from inference_script import main
 
 # list of one letter amino acid codes
 list_aa = list("ARNDCQEGHILKMFPSTWYVUX_?-")
@@ -22,26 +22,36 @@ encoded_logo = base64.b64encode(open(logo_filename, 'rb').read())
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.config['suppress_callback_exceptions'] = True
 app.layout = html.Div([# title & headings & logo
-                       #html.Img(src='data:image/png;base64,{}'.format(encoded_logo.decode()), height=300),
-                       #html.H1(title),
+                       html.Img(src='data:image/png;base64,{}'.format(encoded_logo.decode()), height=300),
+                       html.H1(title),
                        # Tabs
                        dcc.Tabs(
                         id='tabs-all',
                         value='about-thermodrift',
+                        parent_className='custom-tabs',
+                        className='custom-tabs-container',
                         children=[
                             dcc.Tab(
                                 label='About ThermoDrift',
                                 value='about-thermodrift',
+                                className='custom-tab',
+                                selected_className='custom-tab--selected'
                                 ),
                             dcc.Tab(
                                 label='Sequence Prediction',
                                 value='sequence-prediction',
+                                className='custom-tab',
+                                selected_className='custom-tab--selected'
                                 ),
                             ]),
                        html.Div(id='tabs-content')
 
                        ])
                        
+# display tabs
+@app.callback(
+    Output('tabs-content', 'children'),
+    Input('tabs-all', 'value'))
 
 
 def render_content(tab):
@@ -71,24 +81,13 @@ def render_content(tab):
             dcc.Upload(
                 id='upload-data',
                 children=html.Div([
-                    'Drag and Drop or ',
-                    html.A('Select Files')
+                    html.Button('Upload FASTA File')
                     ]),
-                style={
-                'width': '100%',
-                'height': '60px',
-                'lineHeight': '60px',
-                'borderWidth': '1px',
-                'borderStyle': 'dashed',
-                'borderRadius': '5px',
-                'textAlign': 'center',
-                'margin': '10px'
-                },
                 # allow multiple files to be uploaded
-                multiple=True
-                ),
+                multiple=True),
             html.Div(id='output-data-upload'),
             # Download csv of output data
+            html.Hr(),
             html.Button('Download CSV', id='btn_csv'),
             dcc.Download(id='download-dataframe-csv')
 
@@ -148,13 +147,9 @@ def parse_contents(contents, filename, date):
                                 Please upload a FASTA file.
                          """])
 
-# display tabs
-@app.callback(
-    Output('tabs-content', 'children'),
-    Input('tabs-all', 'value')
-    )
 
-# upload 
+
+# upload fasta file
 @app.callback(
     Output('output-data-upload', 'children'),
     Input('upload-data', 'contents'),
@@ -162,6 +157,7 @@ def parse_contents(contents, filename, date):
     State('upload-data', 'last_modified'),
     suppress_callback_exceptions=True
     )
+
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
@@ -169,11 +165,12 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             zip(list_of_contents, list_of_names, list_of_dates)]
     return children
 
-# download
+# download csv
 @app.callback(
     Output("download-dataframe-csv", "data"),
     Input("btn_csv", "n_clicks"),
-    prevent_initial_call=True
+    prevent_initial_call=True,
+    suppress_callback_exceptions=True
     )
 def func(n_clicks):
     return dcc.send_data_frame(df.to_csv, "thermodrift_output.csv")
