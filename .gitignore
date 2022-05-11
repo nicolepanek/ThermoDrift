@@ -11,3 +11,6 @@ model/__pycache__/
 __pycache__/*
 experiments/
 train.log
+model_eval/20220429_analysis_test.txt
+model_eval/20220429_analysis_train.txt
+model_eval/__pycache__/

@@ -8,4 +8,6 @@ dependencies:
   - dash
   - matplotlib
   - biopython
+  - scikit-learn
+  - ipdb
 prefix: /opt/anaconda3/envs/thermo_drift_env
