@@ -2,3 +2,5 @@
 slurm_out/
 *.pt
 *.fasta
+data_*
+experiments/

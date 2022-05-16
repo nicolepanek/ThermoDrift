@@ -11,56 +11,57 @@ import os
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
 
-import thermodrift_model
+import thermodrift_model_seqfrac
+
 
 def add_aa_composition_to_tensor(X_tensor):
-    #first get the shape of the entire tensor
+    # first get the shape of the entire tensor
     tensor_shape = X_tensor.shape
-    
+
     # sum_aa_counts has summed all the 1.0 for every type of aa in a 500 aa sequence
-    #this array should have size [n_sequences(i.e. 60k), 25(types of aas)]
+    # this array should have size [n_sequences(i.e. 60k), 25(types of aas)]
     sum_aa_counts = torch.sum(X_tensor, dim=1)
-    print('sum_aa_counts: ',sum_aa_counts.shape)
-    #assert sum_aa_counts.shape[0] == tensor_shape[0]
-    
+    print('sum_aa_counts: ', sum_aa_counts.shape)
+    # assert sum_aa_counts.shape[0] == tensor_shape[0]
+
     # sum the number of amino acid positions that contain data in them to get the length of every sequence
-    #this array should have size [n_sequences]
-    #lengths_old = torch.sum((sum_aa_counts > 0).long(),dim=1)
-    lengths =  torch.sum(sum_aa_counts, dim=1)
-    print('lengths: ',lengths.shape)
-    
-    #unsqueeze the lengths array to make an array of size [n_sequences,1]
-    #Then expand this array to have duplicate sequence lengths for all 25 amino acid types
-    #this repeat array should have size [n_sequences, 25(types of aas)]
-    repeat = lengths.unsqueeze(dim=1).expand(-1,25)
-    print('repeat: ',repeat.shape)
-    
-    #Divide the summed counts of each aa type in a given sequence by the length of that sequence to get percent aa
-    #Then unsqueeze to add a dimension at dim=1
-    #this divide_tensors array should have size [n_sequences, 1, 25(types of aas)]
+    # this array should have size [n_sequences]
+    # lengths_old = torch.sum((sum_aa_counts > 0).long(),dim=1)
+    lengths = torch.sum(sum_aa_counts, dim=1)
+    print('lengths: ', lengths.shape)
+
+    # unsqueeze the lengths array to make an array of size [n_sequences,1]
+    # Then expand this array to have duplicate sequence lengths for all 25 amino acid types
+    # this repeat array should have size [n_sequences, 25(types of aas)]
+    repeat = lengths.unsqueeze(dim=1).expand(-1, 25)
+    print('repeat: ', repeat.shape)
+
+    # Divide the summed counts of each aa type in a given sequence by the length of that sequence to get percent aa
+    # Then unsqueeze to add a dimension at dim=1
+    # this divide_tensors array should have size [n_sequences, 1, 25(types of aas)]
     divide_tensors = sum_aa_counts/repeat
     divide_tensors = divide_tensors.unsqueeze(dim=1)
-    print('divide_tensors: ',divide_tensors.shape)
+    print('divide_tensors: ', divide_tensors.shape)
 
-    
-    #Now concatenate the amino acid fractions of each sequence to the end of the original tensor
-    #this new combine_tensors array should have size [n_sequences, 501, 25]
-    combine_tensors = torch.cat((X_tensor,divide_tensors),dim=1)
-    print('combine_tensors: ',combine_tensors.shape)
+    # Now concatenate the amino acid fractions of each sequence to the end of the original tensor
+    # this new combine_tensors array should have size [n_sequences, 501, 25]
+    combine_tensors = torch.cat((X_tensor, divide_tensors), dim=1)
+    print('combine_tensors: ', combine_tensors.shape)
 
     return combine_tensors
 
-def load_data():
+
+def load_data(args):
     # Load data
-    X = torch.load('/gscratch/stf/jgershon/tensor_x.pt')
-    Y = torch.load('/gscratch/stf/jgershon/tensor_y.pt')
-	X = add_aa_composition_to_tensor(X)
+    X = torch.load(os.path.join(args.data_dir, 'tensor_x.pt'))
+    Y = torch.load(os.path.join(args.data_dir, 'tensor_y.pt'))
+    X = add_aa_composition_to_tensor(X)
 
     return X, Y
 
 
-def split_data(X, Y):
-    if 'X_train.pt' not in os.listdir('/gscratch/stf/jgershon/'):
+def split_data(X, Y, args):
+    if 'X_train_aacomp.pt' not in os.listdir('args.data_dir'):
         # Convert y back from one hot encoding
         Y = torch.argmax(Y, dim=1)
         print('new Y: ', Y[:10])
@@ -75,15 +76,15 @@ def split_data(X, Y):
         print('X_test: ', X_test.size())
         print('y_train: ', y_train.size())
         print('y_test: ', y_test.size())
-        torch.save(X_train, '/gscratch/stf/jgershon/X_train.pt')
-        torch.save(X_test, '/gscratch/stf/jgershon/X_test.pt')
-        torch.save(y_train, '/gscratch/stf/jgershon/y_train.pt')
-        torch.save(y_test, '/gscratch/stf/jgershon/y_test.pt')
+        torch.save(X_train, os.path.join(args.data_dir, 'X_train_aa_comp.pt'))
+        torch.save(X_test, os.path.join(args.data_dir, 'X_test_aa_comp.pt'))
+        torch.save(y_train, os.path.join(args.data_dir, 'y_train_aa_comp.pt'))
+        torch.save(y_test, os.path.join(args.data_dir, 'y_test_aa_comp.pt'))
     else:
-        X_train = torch.load('/gscratch/stf/jgershon/X_train.pt')
-        X_test = torch.load('/gscratch/stf/jgershon/X_test.pt')
-        y_train = torch.load('/gscratch/stf/jgershon/y_train.pt')
-        y_test = torch.load('/gscratch/stf/jgershon/y_test.pt')
+        X_train = torch.load(os.path.join(args.data_dir, 'X_train_aa_comp.pt'))
+        X_test = torch.load(os.path.join(args.data_dir, 'X_test_aa_comp.pt'))
+        y_train = torch.load(os.path.join(args.data_dir, 'y_train_aa_comp.pt'))
+        y_test = torch.load(os.path.join(args.data_dir, 'y_test_aa_comp.pt'))
 
     return X_train, X_test, y_train, y_test
 
@@ -93,6 +94,7 @@ def get_args():
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-indir', type=str, required=False, default=None)
     parser.add_argument('-outdir', type=str, required=True, default=None)
+    parser.add_argument('-data_dir', type=str, required=True, default=None)
     args = parser.parse_args()
     return args
 
@@ -103,8 +105,8 @@ outdir = args.outdir
 
 
 # Loading and processing the data:
-X, Y = load_data()
-X_train, X_test, y_train, y_test = split_data(X, Y)
+X, Y = load_data(args)
+X_train, X_test, y_train, y_test = split_data(X, Y, args)
 
 
 # Do we need to normalize the one hot encoded tensors? Prob not.
@@ -124,7 +126,7 @@ test_loader = torch.utils.data.DataLoader(testset,
 
 
 # Instantiate the network
-model = thermodrift_model.Net()
+model = thermodrift_model_seqfrac.Net()
 # Load model from previous state if indir arg is specified
 if indir is not None:
     if len(indir) > 0:
@@ -177,9 +179,14 @@ for epoch in range(num_epochs):
 
         # Clear gradients
         optimizer.zero_grad()
-
+        print('train: ', train.size())
         # Forward propagation
-        outputs = model(train.unsqueeze(1))
+        x_seq = train[:, :-1, :]
+        x_frac = train[:, -1, :20]
+
+        print('x_seq premodel: ', x_seq.size())
+        print('x_frac premodel: ', x_frac.size())
+        outputs = model(x_seq.unsqueeze(1), x_frac)
 
         # Calculate relu and cross entropy loss
         loss = criterion(outputs, labels)
@@ -202,9 +209,11 @@ for epoch in range(num_epochs):
             # Iterate through test dataset
             for j, data in enumerate(test_loader, 0):
                 test, labels = data
-
                 # Forward propagation
-                outputs = model(test.unsqueeze(1))
+                x_seq = test[:, :-1, :]
+                x_frac = test[:, -1, :20]
+
+                outputs = model(x_seq.unsqueeze(1), x_frac)
 
                 loss_valid = criterion(outputs, labels)
 
@@ -216,7 +225,7 @@ for epoch in range(num_epochs):
 
                 correct += (predicted == labels).sum()
                 valid_loss += float(loss_valid.data)
-                #print('valid_loss: ', valid_loss)
+                # print('valid_loss: ', valid_loss)
             accuracy = 100 * correct / float(total)
             print('Valid - iter: '+str(count/n_run_valid) +
                   ' loss: '+str(float(valid_loss/(j+1))))
@@ -225,6 +234,7 @@ for epoch in range(num_epochs):
             # Print Loss
             print('Iteration: {}  Train Loss: {}  Test Accuracy: {} %'.format(
                 count, loss.data, accuracy))
-            path = outdir+'save_model/model_'+str(count)+'.pt'
+            path = os.path.join(outdir, 'save_model/',
+                                'model_'+str(count)+'.pt')
             torch.save(model.state_dict(), path)
             print('Model '+str(count)+' was saved.')
