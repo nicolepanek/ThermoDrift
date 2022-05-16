@@ -22,11 +22,11 @@ def add_aa_composition_to_tensor(X_tensor):
     # this array should have size [n_sequences(i.e. 60k), 25(types of aas)]
     sum_aa_counts = torch.sum(X_tensor, dim=1)
     print('sum_aa_counts: ', sum_aa_counts.shape)
-    # assert sum_aa_counts.shape[0] == tensor_shape[0]
+    #assert sum_aa_counts.shape[0] == tensor_shape[0]
 
     # sum the number of amino acid positions that contain data in them to get the length of every sequence
     # this array should have size [n_sequences]
-    # lengths_old = torch.sum((sum_aa_counts > 0).long(),dim=1)
+    #lengths_old = torch.sum((sum_aa_counts > 0).long(),dim=1)
     lengths = torch.sum(sum_aa_counts, dim=1)
     print('lengths: ', lengths.shape)
 
