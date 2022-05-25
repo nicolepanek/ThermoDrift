@@ -10,7 +10,9 @@ from inference_script import forward_pass_analysis
 from sklearn.model_selection import train_test_split
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
-import sys
+#import sys
+import csv
+import ipdb
 # sys.path.append("/usr/lusers/aultl/ThermoDrift/model_eval")
 
 
@@ -54,22 +56,16 @@ def split_data(X, Y):
 X, Y = load_data()
 X_train, X_test, y_train, y_test = split_data(X, Y)
 
-print("Success! All data has been loaded.")
-
 model_out = forward_pass_analysis(X_train, y_train)
-with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220511_analysis_train.txt', "w") as f:
-    writer = csv.writer(f, delimiter='\t', lineterminator='/n')
-    header = ["predicted", "raw probabilities", "true_label"]
+with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220512_analysis_train.csv', "w") as f:
+    writer = csv.writer(f)
+    header = ["predicted", "raw_probabilities", "true_label"]
     writer.writerow(header)
     f.writelines(model_out)
-
-print("Train data processed by model.")
-
 
 model_out = forward_pass_analysis(X_test, y_test)
-with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220511_analysis_test.txt', "w") as f:
-    writer = csv.writer(f, delimiter='\t', lineterminator='/n')
-    header = ["predicted", "raw probabilities", "true_label"]
+with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220512_analysis_test.csv', "w") as f:
+    writer = csv.writer(f)
+    header = ["predicted", "raw_probabilities", "true_label"]
     writer.writerow(header)
     f.writelines(model_out)
-print("Test data processed by model.")

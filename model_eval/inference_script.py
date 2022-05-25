@@ -12,9 +12,6 @@ from Bio import Seq
 from Bio import SeqIO
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
-import sys
-
-# sys.path.append('/usr/lusers/aultl/ThermoDrift/')
 
 
 # DATA LOADING FUNCTIONS
@@ -81,26 +78,6 @@ def seq1hot(seq_list):
     return X_data
 
 
-##########################################
-## temporary model pass to demo the GUI ##
-##########################################
-
-# def forward_pass(data):
-#     '''
-#     Input data in shape [N,L,25]
-#     will process data through the model and then predict
-#     '''
-#     #Load model from saved outputs
-#     model_save_path = '/usr/lusers/aultl/ThermoDrift/thermodrift_model.py'
-#     model = thermodrift_model.Net()
-#     if os.path.isfile(model_save_path):
-#         model.load_state_dict(torch.load(PATH))
-
-#     outputs = model(data.unsqueeze(1))
-#     predicted = torch.max(outputs.data, 1)[1]
-#     raw_out = outputs.data
-#     return predicted, raw_out
-
 def forward_pass_analysis(x, y):
     '''
     Input data in shape [N,L,25]
@@ -120,10 +97,10 @@ def forward_pass_analysis(x, y):
         outputs = model(x[i][None, None, ...])
         predicted = torch.max(outputs.data, 1)[1]
         raw_out = outputs.data
-        pred = str([x.item() for x in predicted])
+        pred = str([x for x in predicted])
         raw = str([x.tolist() for x in raw_out])
         true_label = str([x for x in torch.unsqueeze(y[i], 0)])
-        s = pred + raw + true_label + '\n'
+        s = ','.join([pred, raw, true_label, "\n"])
         model_out.append(s)
 
     return model_out
