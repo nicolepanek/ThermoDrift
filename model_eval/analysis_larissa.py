@@ -57,14 +57,14 @@ X, Y = load_data()
 X_train, X_test, y_train, y_test = split_data(X, Y)
 
 model_out = forward_pass_analysis(X_train, y_train)
-with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220512_analysis_train.csv', "w") as f:
+with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220527_analysis_train.csv', "w") as f:
     writer = csv.writer(f)
     header = ["predicted", "raw_probabilities", "true_label"]
     writer.writerow(header)
     f.writelines(model_out)
 
 model_out = forward_pass_analysis(X_test, y_test)
-with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220512_analysis_test.csv', "w") as f:
+with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220527_analysis_test.csv', "w") as f:
     writer = csv.writer(f)
     header = ["predicted", "raw_probabilities", "true_label"]
     writer.writerow(header)

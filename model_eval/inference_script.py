@@ -85,7 +85,7 @@ def forward_pass_analysis(x, y):
     '''
     # Load model from saved outputs
     model_out = []
-    model_save_path = '/gscratch/stf/jgershon/experiments/medium_widthv8/save_model/model_1500.pt'
+    model_save_path = '/gscratch/stf/jgershon/experiments/aa_compv5/save_model/model_3500.pt'
     model = thermodrift_model.Net()
     model.load_state_dict(torch.load(model_save_path))
 
