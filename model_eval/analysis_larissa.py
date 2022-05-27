@@ -10,10 +10,9 @@ from inference_script import forward_pass_analysis
 from sklearn.model_selection import train_test_split
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
-#import sys
 import csv
 import ipdb
-# sys.path.append("/usr/lusers/aultl/ThermoDrift/model_eval")
+
 
 
 def load_data():
@@ -56,7 +55,7 @@ def split_data(X, Y):
 X, Y = load_data()
 X_train, X_test, y_train, y_test = split_data(X, Y)
 
-model_out = forward_pass_analysis(X_train, y_train)
+model_out = forward_pass_analysis(X_train, y_train, aa_comp=True)
 with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220527_analysis_train.csv', "w") as f:
     writer = csv.writer(f)
     header = ["predicted", "raw_probabilities", "true_label"]

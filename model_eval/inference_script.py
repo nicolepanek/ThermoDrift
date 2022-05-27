@@ -7,6 +7,7 @@ import torch.optim as optim
 import torch.nn as nn
 import Bio
 import thermodrift_model
+import thermodrift_model_seqfrac
 from torch.autograd import Variable
 from Bio import Seq
 from Bio import SeqIO
@@ -78,15 +79,23 @@ def seq1hot(seq_list):
     return X_data
 
 
-def forward_pass_analysis(x, y):
+def forward_pass_analysis(x, y, aa_comp):
     '''
     Input data in shape [N,L,25]
     will process data through the model and then predict
     '''
     # Load model from saved outputs
     model_out = []
-    model_save_path = '/gscratch/stf/jgershon/experiments/aa_compv5/save_model/model_3500.pt'
-    model = thermodrift_model.Net()
+
+    if aa_comp == True:
+        model_save_path = '/gscratch/stf/jgershon/experiments/aa_compv5/save_model/model_3500.pt'
+        model = thermodrift_model_seqfrac.Net()
+
+    else:
+        model = thermodrift_model.Net()
+        # add correct path here for old model weights
+        #model_save_path = '/gscratch/stf/jgershon/experiments/aa_compv5/save_model/model_3500.pt'
+
     model.load_state_dict(torch.load(model_save_path))
 
     ### named tuple for organized data set output ###
