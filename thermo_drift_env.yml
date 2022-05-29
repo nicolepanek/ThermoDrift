@@ -94,4 +94,5 @@ dependencies:
   - zipp=3.7.0
   - zlib=1.2.11
   - zstd=1.4.9
+  - fair-esm
 prefix: /opt/anaconda3/envs/thermo_drift_env
