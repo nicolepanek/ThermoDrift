@@ -3,4 +3,5 @@ slurm_out/
 *.pt
 *.fasta
 data_*
-experiments/
+experiments/save_model/
+data/train_embs.pkl
