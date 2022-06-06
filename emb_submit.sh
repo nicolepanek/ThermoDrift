@@ -4,7 +4,7 @@ script='/home/ec2-user/ThermoDrift/emb_train.py'
 main_dir='/home/ec2-user/ThermoDrift/experiments'
 
 #Name experiment here
-experiment_dir='trainv6'
+experiment_dir='trainv6_1'
 
 #Code to see if experiment name already exists
 if [ -d "$main_dir/$experiment_dir" ]
@@ -16,7 +16,7 @@ echo "Making new directory for $experiment_dir"
 mkdir "$main_dir/$experiment_dir"
 mkdir "$main_dir/$experiment_dir/save_model"
 
-#indir='/gscratch/stf/jgershon/experiments/medium_widthv6/save_model/model_2000.pt'
+indir='/home/ec2-user/ThermoDrift/experiments/trainv6/save_model/model_11.pt'
 outdir="$main_dir/$experiment_dir/"
 data_dir="/home/ec2-user/ThermoDrift/data/"
 
@@ -25,7 +25,7 @@ data_dir="/home/ec2-user/ThermoDrift/data/"
 
 source activate pytorch
 
-python -u $script -data_dir $data_dir -outdir $outdir >> $outdir/train.log
+python -u $script -data_dir $data_dir -indir $indir -outdir $outdir >> $outdir/train.log
 
 
 
