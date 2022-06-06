@@ -109,7 +109,6 @@ grad_accum = 256
 print('Now beginning training')
 
 
-
 for i, data in enumerate(train_loader):
     seq, labels = data
     seq = seq.to(device)
@@ -117,12 +116,16 @@ for i, data in enumerate(train_loader):
     x, _ = get_emb_esm1b(seq, LM_model=LM_model, average=True)
     if i == 0:
         comp_emb = torch.clone(x)
+        y = torch.clone(labels)
     else:
         comp_emb = torch.cat((comp_emb,x),dim=0)
+        y = torch.cat((y,labels),dim=0)
     print(f'Now embiding seq {i+1}', end='\r')
 
 
 torch.save(comp_emb,os.path.join(args.data_dir,'train_embs.pt'))
+torch.save(y,os.path.join(args.data_dir,'train_embs_y.pt'))
+
 
 with open(os.path.join(args.data_dir,'train_embs.pkl'), 'wb') as f:
     print(f'Now saving to {os.path.join(args.data_dir,"train_embs.pkl")}')

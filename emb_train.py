@@ -100,7 +100,7 @@ if indir is not None:
 # Instantiate the cross-entropy loss
 criterion = nn.CrossEntropyLoss()
 # Instantiate the Adam optimizer
-optimizer = optim.Adam(classifier.parameters(),lr=5e-5)
+optimizer = optim.Adam(classifier.parameters(),lr=3e-4)
 print('Classifier, optimizer, and criterion compiled')
 
 

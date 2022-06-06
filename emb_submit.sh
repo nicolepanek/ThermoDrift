@@ -4,7 +4,7 @@ script='/home/ec2-user/ThermoDrift/emb_train.py'
 main_dir='/home/ec2-user/ThermoDrift/experiments'
 
 #Name experiment here
-experiment_dir='trainv5'
+experiment_dir='trainv6'
 
 #Code to see if experiment name already exists
 if [ -d "$main_dir/$experiment_dir" ]
