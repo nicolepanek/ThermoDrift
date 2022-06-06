@@ -12,8 +12,10 @@ from Bio import SeqIO
 import matplotlib.pyplot as plt
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
-
 import ipdb
+
+from torch.utils.data import TensorDataset, DataLoader
+from sklearn.model_selection import train_test_split
 
 import thermodrift_model
 
@@ -145,5 +147,3 @@ def main(path):
     df_user['psychrophile probability'] = class_2_prob
         
     return df_user
-		
-

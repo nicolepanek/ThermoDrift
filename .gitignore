@@ -5,9 +5,14 @@ __pycache__/inference_script.cpython-38.pyc
 __pycache__/temp_model.cpython-38.pyc	
 __pycache__/thermodrift_model.cpython-38.pyc
 __pycache__/temp_model.cpython-38.pyc
-.gitignore
 model/inference_script_updated.py
 model_eval/__pycache__/
 model/__pycache__/
 __pycache__/*
-experiments/
+*.out
+slurm_out/
+*.pt
+*.fasta
+data_*
+experiments/save_model/
+data/train_embs.pkl
