@@ -12,7 +12,7 @@ script='/usr/lusers/jgershon/ThermoDrift/train_script_w_aa_composition.py'
 main_dir='/gscratch/stf/jgershon/experiments'
 
 #Name experiment here
-experiment_dir='aa_compv5'
+experiment_dir='aa_comp_drop15v3'
 
 #Code to see if experiment name already exists
 if [ -d "$main_dir/$experiment_dir" ]
@@ -24,7 +24,7 @@ echo "Making new directory for $experiment_dir"
 mkdir "$main_dir/$experiment_dir"
 mkdir "$main_dir/$experiment_dir/save_model"
 
-indir='/gscratch/stf/jgershon/experiments/aa_compv4/save_model/model_3500.pt'
+indir='/gscratch/stf/jgershon/experiments/aa_comp_drop15v2/save_model/model_500.pt'
 outdir="$main_dir/$experiment_dir"
 
 autopep8 --in-place /usr/lusers/jgershon/ThermoDrift/train_script_w_aa_composition.py

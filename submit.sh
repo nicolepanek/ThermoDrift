@@ -12,7 +12,7 @@ script='/usr/lusers/jgershon/ThermoDrift/train_script.py'
 main_dir='/gscratch/stf/jgershon/experiments'
 
 #Name experiment here
-experiment_dir='medium_widthv8'
+experiment_dir='medium_width_drop15v3'
 
 #Code to see if experiment name already exists
 if [ -d "$main_dir/$experiment_dir" ]
@@ -24,14 +24,14 @@ echo "Making new directory for $experiment_dir"
 mkdir "$main_dir/$experiment_dir"
 mkdir "$main_dir/$experiment_dir/save_model"
 
-indir='/gscratch/stf/jgershon/experiments/medium_widthv6/save_model/model_2000.pt'
+indir='/gscratch/stf/jgershon/experiments/medium_width_drop15v2/save_model/model_500.pt'
 outdir="$main_dir/$experiment_dir/"
 
 autopep8 --in-place /usr/lusers/jgershon/ThermoDrift/train_script.py
 autopep8 --in-place /usr/lusers/jgershon/ThermoDrift/thermodrift_model.py
 
 source activate thermodrift
-python -u $script -indir $indir -outdir $outdir >> $outdir/train.log
+python -u $script -outdir $outdir -indir $indir >> $outdir/train.log
 
 
 
