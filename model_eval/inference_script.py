@@ -13,7 +13,7 @@ from Bio import Seq
 from Bio import SeqIO
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
-
+import ipdb
 
 # DATA LOADING FUNCTIONS
 
@@ -83,19 +83,18 @@ def forward_pass_analysis(x, y, aa_comp):
     '''
     Input data in shape [N,L,25]
     will process data through the model and then predict
+    :params aa_comp: boolean - if true, use model with aa composition feature;
+                               if false, use version 1 model 
     '''
     # Load model from saved outputs
     model_out = []
-
+    # choose correct model version
     if aa_comp == True:
         model_save_path = '/gscratch/stf/jgershon/experiments/aa_compv5/save_model/model_3500.pt'
         model = thermodrift_model_seqfrac.Net()
-
     else:
         model = thermodrift_model.Net()
-        # add correct path here for old model weights
-        # model_save_path = '/gscratch/stf/jgershon/experiments/aa_compv5/save_model/model_3500.pt'
-
+        model_save_path = '/gscratch/stf/jgershon/experiments/medium_widthv8/save_model/model_1500.pt'
     model.load_state_dict(torch.load(model_save_path))
 
     ### named tuple for organized data set output ###
@@ -103,7 +102,31 @@ def forward_pass_analysis(x, y, aa_comp):
         if i % 100 == 0:
             print('Now running example ', i)
 
-        outputs = model(x[i][None, None, ...])
+        if aa_comp == True:
+            # retrieve x_frac
+            trainset = TensorDataset(x, y)
+            train_loader = torch.utils.data.DataLoader(trainset,
+                                                       batch_size=100,
+                                                       shuffle=True,
+                                                       num_workers=2)
+            for i, data in enumerate(train_loader, 0):
+                train, labels = data
+
+                optimizer = optim.Adam(model.parameters(),
+                                       lr=3e-4,
+                                       weight_decay=0.001)
+                # Clear gradients
+                optimizer.zero_grad()
+
+                # Forward propagation
+                x_seq = train[:, :-1, :]
+                x_frac = train[:, -1, :20]
+
+                outputs = model(x_seq.unsqueeze(1), x_frac)
+
+        else:
+            outputs = model(x[i][None, None, ...])
+
         predicted = torch.max(outputs.data, 1)[1]
         raw_out = outputs.data
         pred = str([x for x in predicted])

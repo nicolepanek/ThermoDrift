@@ -1,6 +1,7 @@
 slurm_out/
 *.log
 *.pt
+model_eval/*~
 __pycache__/inference_script.cpython-38.pyc
 __pycache__/temp_model.cpython-38.pyc	
 __pycache__/thermodrift_model.cpython-38.pyc
@@ -11,8 +12,5 @@ model/__pycache__/
 __pycache__/*
 experiments/
 train.log
-model_eval/20220429_analysis_test.txt
-model_eval/20220429_analysis_train.txt
 model_eval/datasets
-model_eval/figs
 model_eval/__pycache__/

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=thermodrift
+#SBATCH --job-name=Analysis2_aa_comp_feature
 #SBATCH -p ckpt
 #SBATCH -A stf-ckpt
 #SBATCH --nodes=1
