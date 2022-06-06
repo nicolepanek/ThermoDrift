@@ -8,9 +8,11 @@ __pycache__/thermodrift_model.cpython-38.pyc
 __pycache__/temp_model.cpython-38.pyc
 .gitignore
 model/inference_script_updated.py
+model_eval/__pycache__/
 model/__pycache__/
 __pycache__/*
 experiments/
 train.log
 model_eval/datasets
 model_eval/__pycache__/
+

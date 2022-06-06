@@ -36,7 +36,6 @@ for tensor in tensor_dir.glob("*aa_comp.pt"):
     name = tensor.name.split("_aa_comp.pt")[0]
     tensors[name] = load_data(tensor)
 
-# ipdb.set_trace()
 
 model_out = forward_pass_analysis(
     tensors['X_train'], tensors['y_train'], aa_comp=True)
