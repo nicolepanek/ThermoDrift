@@ -11,7 +11,6 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
 import csv
-import ipdb
 
 
 def load_data():
@@ -61,7 +60,7 @@ with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220527_analysis_train.csv'
     writer.writerow(header)
     f.writelines(model_out)
 
-model_out = forward_pass_analysis(X_test, y_test)
+model_out = forward_pass_analysis(X_test, y_test, aa_comp=True)
 with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220527_analysis_test.csv', "w") as f:
     writer = csv.writer(f)
     header = ["predicted", "raw_probabilities", "true_label"]

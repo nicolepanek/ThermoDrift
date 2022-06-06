@@ -94,7 +94,7 @@ def forward_pass_analysis(x, y, aa_comp):
     else:
         model = thermodrift_model.Net()
         # add correct path here for old model weights
-        #model_save_path = '/gscratch/stf/jgershon/experiments/aa_compv5/save_model/model_3500.pt'
+        # model_save_path = '/gscratch/stf/jgershon/experiments/aa_compv5/save_model/model_3500.pt'
 
     model.load_state_dict(torch.load(model_save_path))
 
