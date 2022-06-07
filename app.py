@@ -9,6 +9,7 @@ import pandas as pd
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from dash import dcc, html, dash_table
+
 #from temp_model import temp_model
 from model.CNN_model.inference_script import main
 
