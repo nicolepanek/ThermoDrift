@@ -8,8 +8,12 @@ import pandas as pd
 
 from dash.dependencies import Input, Output, State
 from dash import dcc, html, dash_table
-from temp_model import temp_model
-from inference_script import main
+#from temp_model import temp_model
+from model.CNN_model import thermodrift_model
+from model.CNN_model.inference_script import main
+
+
+
 
 # list of one letter amino acid codes
 list_aa = list("ARNDCQEGHILKMFPSTWYVUX_?-")
@@ -19,7 +23,7 @@ title = "ThermoDrift: Predict protein stability"
 logo_filename = "images/thermodrift_logo.png"
 encoded_logo = base64.b64encode(open(logo_filename, 'rb').read())
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+#app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.config['suppress_callback_exceptions'] = True
 app.layout = html.Div([# title & headings & logo
                        html.Img(src='data:image/png;base64,{}'.format(encoded_logo.decode()), height=300),
