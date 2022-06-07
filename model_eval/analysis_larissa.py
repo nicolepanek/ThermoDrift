@@ -61,9 +61,9 @@ with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220605_analysis_train.csv'
     writer.writerow(header)
     f.writelines(model_out)
 
-model_out = forward_pass_analysis(X_test, y_test, aa_comp=False)
-with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220605_analysis_test.csv', "w") as f:
-    writer = csv.writer(f)
-    header = ["predicted", "raw_probabilities", "true_label"]
-    writer.writerow(header)
-    f.writelines(model_out)
+# model_out = forward_pass_analysis(X_test, y_test, aa_comp=False)
+# with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220605_analysis_test.csv', "w") as f:
+#     writer = csv.writer(f)
+#     header = ["predicted", "raw_probabilities", "true_label"]
+#     writer.writerow(header)
+#     f.writelines(model_out)

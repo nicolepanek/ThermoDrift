@@ -13,13 +13,13 @@ tensor_class_dict = (pd.read_csv(p/"datasets"/"tensor_classifications.csv",
                      .to_dict())
 
 # load model test and train set analysis
-df_test = pd.read_csv(p/"datasets"/"20220512_analysis_test.csv", skiprows=1, 
-                      usecols=[0,1,2,3,4])
-df_train = pd.read_csv(p/"datasets"/"20220512_analysis_train.csv", skiprows=1, 
+# df_test = pd.read_csv(p/"datasets"/"20220605_analysis_test.csv", skiprows=1, 
+#                       usecols=[0,1,2,3,4])
+df_train = pd.read_csv(p/"datasets"/"20220605_analysis_train.csv", skiprows=1, 
                        usecols=[0,1,2,3,4])
 
 
-for df in [df_test, df_train]:
+for df in [df_train]:#, df_train]:
     df.columns=["predicted", "thermo_prob", "meso_prob", "psychro_prob", "true_class"]
 
     # reformat probability strings 
@@ -37,7 +37,7 @@ for df in [df_test, df_train]:
     df[["thermo_prob", "meso_prob", "psychro_prob"]] = df[["thermo_prob", "meso_prob", "psychro_prob"]].astype(float)
 
 # save dataframe
-df_test.to_csv(p/"datasets"/"processed_analysis_test_data.csv", index=False)
+#df_test.to_csv(p/"datasets"/"processed_analysis_train_data.csv", index=False)
 df_train.to_csv(p/"datasets"/"processed_analysis_train_data.csv", index=False)
 
 

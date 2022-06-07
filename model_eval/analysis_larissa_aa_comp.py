@@ -36,17 +36,17 @@ for tensor in tensor_dir.glob("*aa_comp.pt"):
     name = tensor.name.split("_aa_comp.pt")[0]
     tensors[name] = load_data(tensor)
 
-model_out = forward_pass_analysis(
-    tensors['X_train'], tensors['y_train'], aa_comp=True)
-with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220605_analysis_train_aa_comp.csv', "w") as f:
-    writer = csv.writer(f)
-    header = ["predicted", "raw_probabilities", "true_label"]
-    writer.writerow(header)
-    f.writelines(model_out)
+# model_out = forward_pass_analysis(
+#     tensors['X_train'], tensors['y_train'], aa_comp=True)
+# with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220606_analysis_train_aa_comp.csv', "w") as f:
+#     writer = csv.writer(f)
+#     header = ["predicted", "raw_probabilities", "true_label"]
+#     writer.writerow(header)
+#     f.writelines(model_out)
 
 model_out = forward_pass_analysis(
     tensors['X_test'], tensors['y_test'], aa_comp=True)
-with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220605_analysis_test_aa_comp.csv', "w") as f:
+with open('/usr/lusers/aultl/ThermoDrift/model_eval/20220606_analysis_test_aa_comp.csv', "w") as f:
     writer = csv.writer(f)
     header = ["predicted", "raw_probabilities", "true_label"]
     writer.writerow(header)
