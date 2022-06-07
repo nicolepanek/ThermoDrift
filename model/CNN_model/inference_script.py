@@ -17,7 +17,7 @@ import ipdb
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
 
-import thermodrift_model
+from model.CNN_model import thermodrift_model
 
 #DATA LOADING FUNCTIONS
 

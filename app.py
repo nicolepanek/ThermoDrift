@@ -19,10 +19,10 @@ list_aa = list("ARNDCQEGHILKMFPSTWYVUX_?-")
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 title = "ThermoDrift: Predict protein stability"
-logo_filename = "../images/thermodrift_logo.png"
+logo_filename = "./images/thermodrift_logo.png"
 encoded_logo = base64.b64encode(open(logo_filename, 'rb').read())
 
-#app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.config['suppress_callback_exceptions'] = True
 app.layout = html.Div([# title & headings & logo
                        html.Img(src='data:image/png;base64,{}'.format(encoded_logo.decode()), height=300),
